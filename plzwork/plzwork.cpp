@@ -28,12 +28,11 @@ static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* use
 
 int main()
 {
-	
 	ConfigmanagerClass Configmanager;
     //-- retrieve the contents of https://api.sightem.dev
 	std::string linkBuffer;
 
-	
+	//-- curl stuff
 	CURL* curl;
 	CURLcode res;
 	curl = curl_easy_init();

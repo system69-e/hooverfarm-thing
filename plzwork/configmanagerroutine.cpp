@@ -8,9 +8,9 @@ bool inputToFile(const std::string& link,
 						bool FarmShinys=1,
 						bool AntiCrash=1,
 						bool PityMode=0,
-						bool RibMode=0)
-																
+						bool RibMode=0)									
 {
+	//-- actually handles the input to the file
 	std::ofstream file;
 	file.open("hooverYBA.lua");
 	
@@ -36,6 +36,7 @@ bool inputToFile(const std::string& link,
 
 void ConfigmanagerClass::createConfig(int input, const std::string& link)
 {
+	//-- switch to handle user's choice
 	switch (input)
 	{
 	case 1:
@@ -63,12 +64,11 @@ void ConfigmanagerClass::createConfig(int input, const std::string& link)
 	std::string command = "move hooverYBA.lua ../autoexec";
 	system(command.c_str());
 	system("cls");
-
 }
 
 bool ConfigmanagerClass::checkConfig()
 {
-	//-- check if file is present in ../autoexec
+	//-- check if file is present in ../autoexec, currently unused
 	std::ifstream file;
 	file.open("../autoexec/hooverYBA.lua");
 	if (file.is_open())
