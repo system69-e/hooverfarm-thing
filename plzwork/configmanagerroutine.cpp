@@ -20,16 +20,25 @@ const std::string autoExecPath = "../autoexec/" + configFile;
 
 const Config configurations[] {
 	{
-		0.5f, false, true, { false, 2.0f }, true, true // default config
+		0.5f, false, true, { false, 2.0f }, true, true //-- default config
 	},
 	{
-		0.5f, false, false, { false, 2.0f }, true, true // do not farm shinys
-	}
+		0.5f, false, false, { false, 2.0f }, true, true //-- do not farm shinys
+	},
+	{
+		0.5f, false, false, { true, 2.0f }, true, true //-- farm pity + do not farm shinys
+	},
+	{
+		0.5f, false, true, { true, 2.0f }, true, true //-- farm pity + shinys
+	},
+
 };
 
 const std::string configNames[] {
 	"Default",
-	"Item farm"
+	"Item farm",
+	"Pity farm only",
+	"Pity farm + shinies",
 };
 
 #define option(name) "getgenv()[\"" << #name << "\"] = " << config.name << std::endl; 
