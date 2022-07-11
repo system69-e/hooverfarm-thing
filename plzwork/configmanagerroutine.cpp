@@ -3,13 +3,16 @@
 #include <fstream>
 #include "configmanagerroutine.h"
 
-struct Config { 
-	bool FarmShinys;
-	bool AntiCrash;
-	bool PityMode;
-	bool RibMode;
-	bool AntiLag;
-	float Timing;
+struct Config {
+  float Teleport_Timing;
+  bool Use_Ribcages;
+  bool Farm_Shinys;
+  struct {
+      bool Farm_Pity;
+      float Pity_Goal;
+  } Pity_Config;
+  bool Reduce_Crashes;
+  bool Anti_Lag;
 };
 
 const std::string configFile = "hooverYBA.lua";
@@ -17,10 +20,10 @@ const std::string autoExecPath = "../autoexec/" + configFile;
 
 const Config configurations[] {
 	{
-		true, true, false, false, true, 1.0f //-- default config
+		0.5f, false, true, { false, 2.0f }, true, true // default config
 	},
 	{
-		false, true, false, false, true, 1.0f //-- do not farm shinys
+		0.5f, false, false, { false, 2.0f }, true, true // do not farm shinys
 	}
 };
 
@@ -29,11 +32,10 @@ const std::string configNames[] {
 	"Item farm"
 };
 
-#define writeBoolOption(name) \
- '[' << '"' << #name << '"' << ']' << '=' << std::boolalpha << config.name << std::noboolalpha << ',' << std::endl;
-
-#define writePrimitiveOption(name) \
- '[' << '"' << #name << '"' << ']' << '=' << config.name << ',' << std::endl;
+#define option(name) "getgenv()[\"" << #name << "\"] = " << config.name << std::endl; 
+#define bool_option(name) "getgenv()[\"" << #name << "\"] = " << (config.name ? "true" : "false") << std::endl;
+#define named_option(name, value) "[\"" << #name << "\"] = " << config.value << ',' << std::endl;
+#define named_bool_option(name, value) "[\"" << #name << "\"] = " << (config.value ? "true" : "false") << ',' << std::endl;
 
 bool inputToFile(const std::string& link, Config config = configurations[0])									
 {
@@ -41,15 +43,15 @@ bool inputToFile(const std::string& link, Config config = configurations[0])
 	std::ofstream file;
 	file.open(configFile);
 	
-	file << "getgenv().Config = {" << std::endl;
-	file << writeBoolOption(FarmShinys);
-	file << writeBoolOption(AntiCrash);
-	file << writeBoolOption(AntiLag);
-	file << writeBoolOption(PityMode);
-	file << writeBoolOption(RibMode);
-	file << writePrimitiveOption(Timing);
-	file << '}' << std::endl;
-
+	file << option(Teleport_Timing)
+	file << bool_option(Use_Ribcages)
+	file << bool_option(Farm_Shinys)
+	file << "getgenv()[\"Pity_Config\"] = {" << std::endl;
+	file << named_bool_option(Farm_Pity, Pity_Config.Farm_Pity)
+	file << named_option(Pity_Goal, Pity_Config.Pity_Goal)
+	file << "}" << std::endl;
+	file << bool_option(Reduce_Crashes)
+	file << bool_option(Anti_Lag)
 
 	file << "--[[YOU NEED TO BE ATLEAST LEVEL 3 FOR SHINY FARM (LEVEL 6 For RibFarm)]]--" << std::endl;
 	file << "--[[NO THE SCRIPT DOES NOT SKIP ASSETS.]]--" << std::endl;
