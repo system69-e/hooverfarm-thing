@@ -55,7 +55,7 @@ bool inputToFile(const std::string& link, Config config = configurations[0])
 	file << "--[[YOU NEED TO BE ATLEAST LEVEL 3 FOR SHINY FARM (LEVEL 6 For RibFarm)]]--" << std::endl;
 	file << "--[[NO THE SCRIPT DOES NOT SKIP ASSETS.]]--" << std::endl;
 
-	file << "loadstring(game:HttpGet(" << '"' << link << ',' << "true))() : Activate()";
+	file << "loadstring(game:HttpGet(" << '"' << link << '"' << ',' << "true))() : Activate()";
 
 	file.close();
 	return true;
