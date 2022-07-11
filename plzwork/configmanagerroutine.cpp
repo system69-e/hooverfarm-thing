@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <limits>
 #include "configmanagerroutine.h"
 
 struct Config {
@@ -18,7 +19,7 @@ struct Config {
 const std::string configFile = "hooverYBA.lua";
 const std::string autoExecPath = "../autoexec/" + configFile;
 
-const Config configurations[] {
+Config configurations[] {
 	{
 		0.5f, false, true, { false, 2.0f }, true, true //-- default config
 	},
@@ -26,10 +27,7 @@ const Config configurations[] {
 		0.5f, false, false, { false, 2.0f }, true, true //-- do not farm shinys
 	},
 	{
-		0.5f, false, false, { true, 2.0f }, true, true //-- farm pity + do not farm shinys
-	},
-	{
-		0.5f, false, true, { true, 2.0f }, true, true //-- farm pity + shinys
+		0.5f, false, false, { true, 2.0f }, true, true //-- farm pity only
 	},
 
 };
@@ -38,7 +36,6 @@ const std::string configNames[] {
 	"Default",
 	"Item farm",
 	"Pity farm only",
-	"Pity farm + shinies",
 };
 
 #define option(name) "getgenv()[\"" << #name << "\"] = " << config.name << std::endl; 
@@ -48,6 +45,13 @@ const std::string configNames[] {
 
 bool inputToFile(const std::string& link, Config config = configurations[0])									
 {
+
+	if (config.Pity_Config.Farm_Pity)
+	{
+		std::cout << "Enter pity goal: ";
+		std::cin >> config.Pity_Config.Pity_Goal;
+	}
+	
 	//-- actually handles the input to the file
 	std::ofstream file;
 	file.open(configFile);
@@ -114,6 +118,7 @@ void ConfigmanagerClass::configManager(std::string link)
 	}
 
 	int input;
+	std::cout << "Enter config number: ";
 	std::cin >> input;
 
 	createConfig(input, link);
