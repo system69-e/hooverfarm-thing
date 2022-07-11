@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -18,16 +17,16 @@ const std::string autoExecPath = "../autoexec/" + configFile;
 
 const Config configurations[] {
 	{
-		true, true, false, false, true, 1.0f // default config
+		true, true, false, false, true, 1.0f //-- default config
 	},
 	{
-		false, true, false, false, true, 1.0f // do not farm shinys
+		false, true, false, false, true, 1.0f //-- do not farm shinys
 	}
 };
 
 const std::string configNames[] {
 	"Default",
-	"Not Items"
+	"Item farm"
 };
 
 #define writeBoolOption(name) \
@@ -100,7 +99,7 @@ void ConfigmanagerClass::configManager(std::string link)
 	size_t configSize = sizeof(configNames) / sizeof(configNames[0]);
 	for (int i = 0; i < configSize; i++)
 	{
-		std::cout << i + 1 << ") " << configNames[i] << " config" << std::endl;
+		std::cout << "[" << i + 1 << "] " << configNames[i] << " config" << std::endl;
 	}
 
 	int input;
