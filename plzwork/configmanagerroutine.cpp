@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -30,7 +29,7 @@ const Config configurations[] {
 
 const std::string configNames[] {
 	"Default",
-	"Not Items"
+	"Item farm"
 };
 
 #define option(name) "getgenv()[\"" << #name << "\"] = " << config.name << std::endl; 
@@ -102,7 +101,7 @@ void ConfigmanagerClass::configManager(std::string link)
 	size_t configSize = sizeof(configNames) / sizeof(configNames[0]);
 	for (int i = 0; i < configSize; i++)
 	{
-		std::cout << i + 1 << ") " << configNames[i] << " config" << std::endl;
+		std::cout << "[" << i + 1 << "] " << configNames[i] << " config" << std::endl;
 	}
 
 	int input;
