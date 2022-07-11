@@ -4,23 +4,51 @@
 #include <fstream>
 #include "configmanagerroutine.h"
 
-bool inputToFile(const std::string& link,
-						bool FarmShinys=1,
-						bool AntiCrash=1,
-						bool PityMode=0,
-						bool RibMode=0)									
+struct Config { 
+	bool FarmShinys;
+	bool AntiCrash;
+	bool PityMode;
+	bool RibMode;
+	bool AntiLag;
+	float Timing;
+};
+
+const std::string configFile = "hooverYBA.lua";
+const std::string autoExecPath = "../autoexec/" + configFile;
+
+const Config configurations[] {
+	{
+		true, true, false, false, true, 1.0f // default config
+	},
+	{
+		false, true, false, false, true, 1.0f // do not farm shinys
+	}
+};
+
+const std::string configNames[] {
+	"Default",
+	"Not Items"
+};
+
+#define writeBoolOption(name) \
+ '[' << '"' << #name << '"' << ']' << '=' << std::boolalpha << config.name << std::noboolalpha << ',' << std::endl;
+
+#define writePrimitiveOption(name) \
+ '[' << '"' << #name << '"' << ']' << '=' << config.name << ',' << std::endl;
+
+bool inputToFile(const std::string& link, Config config = configurations[0])									
 {
 	//-- actually handles the input to the file
 	std::ofstream file;
-	file.open("hooverYBA.lua");
+	file.open(configFile);
 	
 	file << "getgenv().Config = {" << std::endl;
-	file << '[' << '"' << "FarmShinys" << '"' << ']' << '=' << std::boolalpha << FarmShinys <<   std::noboolalpha   << ',' << std::endl;
-	file << '[' << '"' << "AntiCrash"  << '"' << ']' << '=' << std::boolalpha << AntiCrash <<    std::noboolalpha	<< ',' << std::endl;
-	file << '[' << '"' << "PityMode"   << '"' << ']' << '=' << std::boolalpha << PityMode <<     std::noboolalpha	<< ',' << std::endl;
-	file << '[' << '"' << "RibMode"    << '"' << ']' << '=' << std::boolalpha << RibMode <<		 std::noboolalpha	<< ',' << std::endl;
-	file << '[' << '"' << "AntiLag"    << '"' << ']' << '=' << "true,"													   << std::endl;
-	file << '[' << '"' << "Timing"     << '"' << ']' << '=' << "1"														   << std::endl;
+	file << writeBoolOption(FarmShinys);
+	file << writeBoolOption(AntiCrash);
+	file << writeBoolOption(AntiLag);
+	file << writeBoolOption(PityMode);
+	file << writeBoolOption(RibMode);
+	file << writePrimitiveOption(Timing);
 	file << '}' << std::endl;
 
 
@@ -33,36 +61,20 @@ bool inputToFile(const std::string& link,
 	return true;
 }
 
-
 void ConfigmanagerClass::createConfig(int input, const std::string& link)
 {
 	//-- switch to handle user's choice
-	switch (input)
+	if(inputToFile(link, configurations[input - 1]))
 	{
-	case 1:
-		if(inputToFile(link))
-		{
-			std::cout << "Config created successfully" << std::endl;
-		}
-		else
-		{
-			std::cout << "Config creation failed" << std::endl;
-		}
-		break;
-	case 2:
-		if(inputToFile(link, 0, 1, 0, 0))
-		{
-			std::cout << "Config created successfully" << std::endl;
-		}
-		else
-		{
-			std::cout << "Config creation failed" << std::endl;
-		}
+		std::cout << "Config created successfully" << std::endl;
+	}
+	else
+	{
+		std::cout << "Config creation failed" << std::endl;
 	}
 
 	//-- move the file to autoexec
-	std::string command = "move hooverYBA.lua ../autoexec";
-	system(command.c_str());
+	system(("move " + configFile + " " + autoExecPath).c_str());
 	system("cls");
 }
 
@@ -70,7 +82,7 @@ bool ConfigmanagerClass::checkConfig()
 {
 	//-- check if file is present in ../autoexec, currently unused
 	std::ifstream file;
-	file.open("../autoexec/hooverYBA.lua");
+	file.open(autoExecPath);
 	if (file.is_open())
 	{
 		file.close();
@@ -85,8 +97,11 @@ bool ConfigmanagerClass::checkConfig()
 
 void ConfigmanagerClass::configManager(std::string link)
 {
-	std::cout << "[1] Default config" << std::endl;
-	std::cout << "[2] Item farm config" << std::endl;
+	size_t configSize = sizeof(configNames) / sizeof(configNames[0]);
+	for (int i = 0; i < configSize; i++)
+	{
+		std::cout << i + 1 << ") " << configNames[i] << " config" << std::endl;
+	}
 
 	int input;
 	std::cin >> input;
