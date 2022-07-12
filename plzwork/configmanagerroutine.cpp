@@ -45,8 +45,19 @@ const std::string configNames[] {
 
 bool inputToFile(const std::string& link, Config config = configurations[0])									
 {
+	if (config.Pity_Config.Farm_Pity)
+	{
+		goto pity;
+	} 
+	else
+	{
+
+		goto normal;
+	}
+
+pity:
 	getc(stdin); //-- skip remainin chars
-read:
+	read:
 	std::cout << "Enter pity goal: ";
 
 	float f;
@@ -54,8 +65,13 @@ read:
 	{
 		std::string buffer;
 		char c;
-		while ((c = getchar()) != '\n') buffer += c;
-		if (buffer.empty()) f = 2.0f;
+		
+		while ((c = getchar()) != '\n') 
+			buffer += c;
+		
+		if (buffer.empty()) 
+			f = 2.0f;
+		
 		else f = std::stof(buffer);
 	}
 	catch (std::exception& e) 
@@ -63,8 +79,9 @@ read:
 		std::cout << "Invalid input, try again." << std::endl;
 		goto read;
 	}
-
 	config.Pity_Config.Pity_Goal = f;
+
+normal:
 	
 	//-- actually handles the input to the file
 	std::ofstream file;
