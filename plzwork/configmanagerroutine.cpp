@@ -100,7 +100,13 @@ normal:
 	file << "--[[YOU NEED TO BE ATLEAST LEVEL 3 FOR SHINY FARM (LEVEL 6 For RibFarm)]]--" << std::endl;
 	file << "--[[NO THE SCRIPT DOES NOT SKIP ASSETS.]]--" << std::endl;
 
-	file << "loadstring(game:HttpGet(" << '"' << link << '"' << ',' << " true))():Activate()";
+	file << "if game.PlaceId == 2809202155 then" << std::endl;
+	file << "repeat wait() until game:IsLoaded()" << std::endl;
+	file << "loadstring(game:HttpGet(" << '"' << link << '"' << ',' << " true))():Activate()" << std::endl ;
+	file << "else" << std::endl;
+	file << "warn" << '(' << '"' << "Incorrect Game" << '"' << ')' << std::endl;
+	file << "end" << std::endl;
+
 
 	file.close();
 	return true;
@@ -140,7 +146,7 @@ bool ConfigmanagerClass::checkConfig()
 	}
 }
 
-void ConfigmanagerClass::configManager(std::string link)
+void ConfigmanagerClass::configManager(const std::string link)
 {
 	size_t configSize = sizeof(configNames) / sizeof(configNames[0]);
 	for (int i = 0; i < configSize; i++)
