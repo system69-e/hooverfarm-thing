@@ -45,12 +45,26 @@ const std::string configNames[] {
 
 bool inputToFile(const std::string& link, Config config = configurations[0])									
 {
+	getc(stdin); //-- skip remainin chars
+read:
+	std::cout << "Enter pity goal: ";
 
-	if (config.Pity_Config.Farm_Pity)
+	float f;
+	try 
 	{
-		std::cout << "Enter pity goal: ";
-		std::cin >> config.Pity_Config.Pity_Goal;
+		std::string buffer;
+		char c;
+		while ((c = getchar()) != '\n') buffer += c;
+		if (buffer.empty()) f = 2.0f;
+		else f = std::stof(buffer);
 	}
+	catch (std::exception& e) 
+	{
+		std::cout << "Invalid input, try again." << std::endl;
+		goto read;
+	}
+
+	config.Pity_Config.Pity_Goal = f;
 	
 	//-- actually handles the input to the file
 	std::ofstream file;
@@ -69,7 +83,7 @@ bool inputToFile(const std::string& link, Config config = configurations[0])
 	file << "--[[YOU NEED TO BE ATLEAST LEVEL 3 FOR SHINY FARM (LEVEL 6 For RibFarm)]]--" << std::endl;
 	file << "--[[NO THE SCRIPT DOES NOT SKIP ASSETS.]]--" << std::endl;
 
-	file << "loadstring(game:HttpGet(" << '"' << link << '"' << ',' << "true))() : Activate()";
+	file << "loadstring(game:HttpGet(" << '"' << link << '"' << ',' << " true))():Activate()";
 
 	file.close();
 	return true;
