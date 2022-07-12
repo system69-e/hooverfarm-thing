@@ -40,8 +40,8 @@ const std::string configNames[] {
 
 #define option(name) "getgenv()[\"" << #name << "\"] = " << config.name << std::endl; 
 #define bool_option(name) "getgenv()[\"" << #name << "\"] = " << (config.name ? "true" : "false") << std::endl;
-#define named_option(name, value) "[\"" << #name << "\"] = " << config.value << ',' << std::endl;
-#define named_bool_option(name, value) "[\"" << #name << "\"] = " << (config.value ? "true" : "false") << std::endl;
+#define named_option(name, value) "[\"" << #name << "\"] = " << config.value << std::endl;
+#define named_bool_option(name, value) "[\"" << #name << "\"] = " << (config.value ? "true" : "false") << ',' << std::endl;
 
 bool inputToFile(const std::string& link, Config config = configurations[0])									
 {
