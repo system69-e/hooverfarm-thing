@@ -11,8 +11,6 @@
 #include <Lmcons.h>
 
 int RestartTime = 20;
-
-
 void AutorestartClass::unlockRoblox()
 {
 	CreateMutex(NULL, TRUE, "ROBLOX_singletonMutex");
@@ -87,19 +85,19 @@ bool AutorestartClass::inputToFile()
 	std::getline(infile, cookie);
 	infile.close();
 
-
-	outfile << "import requests" << std::endl;
-	outfile << "cookie = " << '"' << cookie << '"' << std::endl;
-	outfile << "sess = requests.session()" << std::endl;
-	outfile << "sess.cookies" << '[' << "'" << ".ROBLOSECURITY" << "'" << ']' << " = " << "cookie" << std::endl;
-	outfile << "csrf = sess.post" << '(' << "'" << "https://auth.roblox.com/v1/authentication-ticket" << "'" << ')' << ".headers.get" << "('x-csrf-token')" << std::endl;
-	outfile << "sess.headers" << '[' << "'" << "x-csrf-token" << "'" << ']' << " = " << "csrf" << std::endl;
-	outfile << "authticket = sess.post" << '(' << "'" << "https://auth.roblox.com/v1/authentication-ticket" << "'" << ',' << " headers=" << '{' << "'Referer'" << ':' << "'www.roblox.com'" << ',' << "'Origin':'www.roblox.com'" << '}' << ')' << ".headers.get('rbx-authentication-ticket')" << std::endl;
-
-	outfile << "with open('tokens', 'w') as f:" << std::endl;
-	outfile << "    f.write(csrf +" << "'" << "\\" << "n" << "'" << ')' << std::endl;
-	outfile << "    f.write(authticket)" << std::endl;
+    	const std::string script = "import requests\n"
+		"cookie = '" + cookie + "'\n"
+		"sess = requests.session()\n"
+		"sess.cookies['.ROBLOSECURITY'] = cookie\n"
+		"csrf = sess.post('https://auth.roblox.com/v1/authentication-ticket').headers.get('x-csrf-token')\n"
+		"sess.headers['x-csrf-token'] = csrf\n"
+		"authticket = sess.post('https://auth.roblox.com/v1/authentication-ticket', headers={'Referer':'www.roblox.com','Origin':'www.roblox.com'}).headers.get('rbx-authentication-ticket')\n"
+		"with open('tokens', 'w') as f:\n"
+    		"    f.write(csrf +'\\n')\n"
+    		"    f.write(authticket)";
 	
+	outfile << script;
+
 	return true;
 }
 
