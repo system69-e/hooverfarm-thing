@@ -21,9 +21,15 @@
     <ClCompile Include="configmanagerroutine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="autorestartroutine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="configmanagerroutine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AutorestartClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

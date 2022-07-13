@@ -1,12 +1,11 @@
-
 #define CURL_STATICLIB
 #include <iostream>
 #include <string>
 #include <fstream>
 
-
 #include "curl/curl.h"
 #include "configmanagerroutine.h"
+#include "AutorestartClass.h"
 
 #ifdef _DEBUG
 #pragma comment (lib, "curl/libcurl_a_debug.lib")
@@ -28,7 +27,8 @@ static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* use
 
 int main()
 {
-	ConfigmanagerClass Configmanager;
+	SetConsoleTitle("Floppafarm AIO tool Version 1.0 - by DarkNet#7679 & Sightem#4821 - https://discord.gg/u2vU98KfFS");
+	
     //-- retrieve the contents of https://api.sightem.dev
 	std::string linkBuffer;
 
@@ -60,6 +60,7 @@ int main()
 
 	//-- print options
 	std::cout << "[1] Config manager" << std::endl;
+	std::cout << "[2] Autorestart" << std::endl;
 	
 	//-- print Option choice:
 	std::cout << "Option choice: ";
@@ -73,7 +74,26 @@ int main()
 	{
 	case 1:
 		system("cls");
-	
+		ConfigmanagerClass Configmanager;
 		Configmanager.configManager(linkBuffer);
+	case 2:
+		//check if cookie.txt is present, if not make one
+		std::ifstream cookieFile("cookie.txt");
+		if (!cookieFile.good())
+		{
+			std::cout << "Cookie file not found, creating one" << std::endl;
+			std::ofstream cookieFile("cookie.txt");
+			cookieFile << "";
+			cookieFile.close();
+			return 1;
+		}
+		else
+		{
+			std::cout << "Cookie file found" << std::endl;
+		}
+
+		
+		AutorestartClass Autorestart;
+		Autorestart.start();
 	}
 }
