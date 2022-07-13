@@ -180,11 +180,9 @@ void AutorestartClass::start()
 			//-- get the last element of the vector
 			std::string last_folder = folders.back();
 
-			std::string robloxplayerlauncher = last_folder + "\\RobloxPlayerLauncher.exe";
+			std::string robloxplayerlauncher = '"' + last_folder + "\\RobloxPlayerLauncher.exe" + '"';;
 
-			std::string robloxplayerlauncherinquoutes = '"' + robloxplayerlauncher + '"';
-
-			path = robloxplayerlauncherinquoutes;
+			path = robloxplayerlauncher;
 		}
 		
 		srand(time(NULL));
