@@ -170,7 +170,7 @@ void AutorestartClass::start()
 			std::string username_string = username;
 
 
-			//-- get all folders of C:\Users\sustem\AppData\Local\Roblox\Versions
+			//-- get all folders of C:\Users\{user}\AppData\Local\Roblox\Versions
 			std::vector<std::string> folders;
 			for (auto& p : std::filesystem::directory_iterator("C:\\Users\\" + username_string + "\\AppData\\Local\\Roblox\\Versions"))
 			{
