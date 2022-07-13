@@ -76,6 +76,7 @@ int main()
 		system("cls");
 		ConfigmanagerClass Configmanager;
 		Configmanager.configManager(linkBuffer);
+		break;
 	case 2:
 		//check if cookie.txt is present, if not make one
 		std::ifstream cookieFile("cookie.txt");

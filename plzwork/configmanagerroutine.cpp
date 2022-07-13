@@ -51,7 +51,6 @@ bool inputToFile(const std::string& link, Config config = configurations[0])
 	} 
 	else
 	{
-
 		goto normal;
 	}
 
@@ -79,6 +78,12 @@ pity:
 		std::cout << "Invalid input, try again." << std::endl;
 		goto read;
 	}
+	if (f < 1.5f || f > 5.0f)
+	{
+		std::cout << "Invalid input, try again." << std::endl;
+		goto pity;
+	}
+		
 	config.Pity_Config.Pity_Goal = f;
 
 normal:
