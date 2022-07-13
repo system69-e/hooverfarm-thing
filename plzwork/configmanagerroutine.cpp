@@ -78,9 +78,11 @@ pity:
 		std::cout << "Invalid input, try again." << std::endl;
 		goto read;
 	}
+	
+	//needs more unscuffing
 	if (f < 1.5f || f > 5.0f)
 	{
-		std::cout << "Invalid input, try again." << std::endl;
+		std::cout << "Invalid input, try again. (it must be between 1.5 and 5.0): ";
 		goto pity;
 	}
 		
