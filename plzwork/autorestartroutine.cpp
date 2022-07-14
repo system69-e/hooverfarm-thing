@@ -10,6 +10,15 @@
 #include <filesystem>
 #include <Lmcons.h>
 
+
+#ifdef _UNICODE
+typedef wchar_t TCHAR;
+#else
+typedef char TCHAR;
+#endif // _UNICODE
+
+typedef const TCHAR* LPCTSTR;
+
 int RestartTime = 20;
 void AutorestartClass::unlockRoblox()
 {
@@ -104,7 +113,7 @@ bool AutorestartClass::inputToFile()
 
 void AutorestartClass::Log(const std::string& text, bool error)
 {
-	std::cout << (error ? " [ error ] " + text : " [ Autorestart ] " + text) << std::endl;
+	std::cout << (error ? " [ error ] " + text : " [ Autorestart ] " + text + "                                       ") << std::endl;
 }
 
 void AutorestartClass::_usleep(int microseconds)
@@ -208,7 +217,11 @@ void AutorestartClass::start()
 		{
 
 			std::string msg = "(" + std::to_string(RestartTime - std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - start).count() + 1) + " minutes)";
-			system("cls");
+			
+			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+			COORD coord = { 0, 0 };
+			SetConsoleCursorPosition(hConsole, coord);
+
 			Autorestart.Log(msg, false);
 
 			Autorestart._usleep(10000);

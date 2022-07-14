@@ -4,7 +4,8 @@
 #include <limits>
 #include "configmanagerroutine.h"
 
-struct Config {
+struct Config 
+{
   float Teleport_Timing;
   bool Use_Ribcages;
   bool Farm_Shinys;
@@ -14,25 +15,31 @@ struct Config {
   } Pity_Config;
   bool Reduce_Crashes;
   bool Anti_Lag;
+  struct {
+	bool Use_Webhook;
+	std::string Webhook_URL;
+  } Webhook_config;
 };
 
 const std::string configFile = "hooverYBA.lua";
 const std::string autoExecPath = "../autoexec/" + configFile;
 
-Config configurations[] {
+Config configurations[] 
+{
 	{
-		0.5f, false, true, { false, 2.0f }, true, true //-- default config
+		0.5f, false, true, { false, 2.0f }, true, true, { false, "empty"} //-- default config
 	},
 	{
-		0.5f, false, false, { false, 2.0f }, true, true //-- do not farm shinys
+		0.5f, false, false, { false, 2.0f }, true, true,{ false, "empty"} //-- do not farm shinys
 	},
 	{
-		0.5f, false, false, { true, 2.0f }, true, true //-- farm pity only
+		0.5f, false, false, { true, 2.0f }, true, true, { false, "empty"} //-- farm pity only
 	},
 
 };
 
-const std::string configNames[] {
+const std::string configNames[] 
+{
 	"Default",
 	"Item farm",
 	"Pity farm only",
@@ -41,6 +48,7 @@ const std::string configNames[] {
 #define option(name) "getgenv()[\"" << #name << "\"] = " << config.name << std::endl; 
 #define bool_option(name) "getgenv()[\"" << #name << "\"] = " << (config.name ? "true" : "false") << std::endl;
 #define named_option(name, value) "[\"" << #name << "\"] = " << config.value << std::endl;
+#define named_string_option(name, value) "[\"" << #name << "\"] = " << '"' << config.value << '"'<< std::endl;
 #define named_bool_option(name, value) "[\"" << #name << "\"] = " << (config.value ? "true" : "false") << ',' << std::endl;
 
 bool inputToFile(const std::string& link, Config config = configurations[0])									
@@ -85,10 +93,34 @@ pity:
 		std::cout << "Invalid input, try again. (it must be between 1.5 and 5.0): ";
 		goto pity;
 	}
-		
 	config.Pity_Config.Pity_Goal = f;
 
+
 normal:
+	std::cout << "Do you want to use the webhook feature? (y/n)";
+	char c;
+	std::cin >> c;
+	switch (c)
+	{
+		case 'y': case 'Y':
+				config.Webhook_config.Use_Webhook = true;
+				break;
+		case 'n': case 'N':
+				config.Webhook_config.Use_Webhook = false;
+				break;
+		default:
+			    config.Webhook_config.Use_Webhook = false;
+				break;
+	}
+	
+	if (config.Webhook_config.Use_Webhook)
+	{
+		std::cout << "Enter webhook URL: ";
+		std::string buffer;
+		std::cin >> buffer;
+		config.Webhook_config.Webhook_URL = buffer;
+	}
+
 	
 	//-- actually handles the input to the file
 	std::ofstream file;
@@ -103,6 +135,11 @@ normal:
 	file << "}" << std::endl;
 	file << bool_option(Reduce_Crashes)
 	file << bool_option(Anti_Lag)
+	file << "getgenv()[\"Webhook_Config\"] = {" << std::endl;
+	file << named_bool_option(Use_Webhook, Webhook_config.Use_Webhook)
+	file << named_string_option(Webhook_URL, Webhook_config.Webhook_URL)
+	file << "}" << std::endl;
+
 
 	file << "--[[YOU NEED TO BE ATLEAST LEVEL 3 FOR SHINY FARM (LEVEL 6 For RibFarm)]]--" << std::endl;
 	file << "--[[NO THE SCRIPT DOES NOT SKIP ASSETS.]]--" << std::endl;
