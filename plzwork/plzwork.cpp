@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <windows.h>
 
 #include "curl/curl.h"
 #include "configmanagerroutine.h"
@@ -18,6 +19,7 @@
 #pragma comment (lib, "Wldap32.lib")
 #pragma comment (lib, "Crypt32.lib")
 #pragma comment (lib, "advapi32.lib")
+#pragma comment (lib, "User32.lib")
 
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
 {
@@ -25,10 +27,37 @@ static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* use
     return size * nmemb;
 }
 
-int main()
+
+int main(int argc, char* argv[])
 {
 	SetConsoleTitle("Floppafarm AIO tool Version 1.0 - by DarkNet#7679 & Sightem#4821 - https://discord.gg/u2vU98KfFS");
+
 	
+	bool ontop = 1;
+	bool windowsize = 1;
+	if (argc > 1)
+	{
+		for (int i = 0; i < argc; i++)
+		{
+			if (strcmp(argv[i], "notop") == 0) { ontop = 0;}
+			
+			if (strcmp(argv[i], "nolockwindowsize") == 0) { windowsize = 0;}
+		}
+	}
+
+	//-- always on top
+	if (ontop)
+	{
+		::SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, 0, 0, 0, 0, SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+		::ShowWindow(GetConsoleWindow(), SW_NORMAL);
+	}
+	
+	//-- window size lock
+	if (windowsize)
+	{
+		SetWindowLong(GetConsoleWindow(), GWL_STYLE, GetWindowLong(GetConsoleWindow(), GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
+	}
+
     //-- retrieve the contents of https://api.sightem.dev
 	std::string linkBuffer;
 
