@@ -145,7 +145,7 @@ void AutorestartClass::start()
 		AutorestartClass Autorestart;
 		
 		Autorestart.unlockRoblox();
-		
+
 		Autorestart.killRoblox();
 		
 		system("python gettoken.py");
