@@ -4,6 +4,12 @@
 #include <limits>
 #include <vector>
 #include <sstream>
+
+#include <iomanip>
+#include <utility>
+#include <iostream>
+#include <stdexcept>
+
 #include "configmanagerroutine.h"
 
 struct Config
@@ -76,15 +82,21 @@ read:
     float f;
     try
     {
-        std::string buffer;
+        std::string buffer = "";
         char c;
 
         while ((c = getchar()) != '\n')
             buffer += c;
 
+		if (std::stof(buffer) < 1.5f || std::stof(buffer) > 5.0f)
+		{
+			std::cout << "Invalid input" << std::endl;
+			goto read;
+		}
+
+		
         if (buffer.empty())
             f = 2.0f;
-
         else f = std::stof(buffer);
     }
     catch (std::exception& e)
@@ -93,12 +105,6 @@ read:
         goto read;
     }
 
-    //needs more unscuffing
-    if (f < 1.5f || f > 5.0f)
-    {
-        std::cout << "Invalid input, try again. (it must be between 1.5 and 5.0): ";
-        goto pity;
-    }
     config.Pity_Config.Pity_Goal = f;
 
 
@@ -137,6 +143,7 @@ normal:
     std::cout << "4 Lucky Arrow" << std::endl;
     std::cout << "5.Gold Coin" << std::endl;
     std::cout << "6.Rokakaka" << std::endl;
+    
 	
 
     std::string user_input;
