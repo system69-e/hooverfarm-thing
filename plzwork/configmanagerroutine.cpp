@@ -5,11 +5,6 @@
 #include <vector>
 #include <sstream>
 
-#include <iomanip>
-#include <utility>
-#include <iostream>
-#include <stdexcept>
-
 #include "configmanagerroutine.h"
 
 struct Config
@@ -94,7 +89,6 @@ read:
 			goto read;
 		}
 
-		
         if (buffer.empty())
             f = 2.0f;
         else f = std::stof(buffer);
@@ -145,7 +139,6 @@ normal:
     std::cout << "6.Rokakaka" << std::endl;
     
 	
-
     std::string user_input;
     std::getline(std::cin, user_input);
     getc(stdin);
@@ -181,6 +174,7 @@ normal:
 
     file << "getgenv()[\"Extra_Items\"] = {" << std::endl;
 	
+	//TODO: clean this up for the sake of god
     for (int i = 0; i < user_choice.size(); i++)
     {
         switch (user_choice[i])
@@ -214,7 +208,6 @@ normal:
             system("pause");
         }
     }
-
 
 
     file << '}' << std::endl;
