@@ -103,6 +103,7 @@ read:
 
 
 normal:
+    getc(stdin); //-- skip remaining chars
     /*
     std::cout << "Do you want to use the webhook feature? (y/n)";
     char c;
@@ -137,12 +138,10 @@ normal:
     std::cout << "4 Lucky Arrow" << std::endl;
     std::cout << "5.Gold Coin" << std::endl;
     std::cout << "6.Rokakaka" << std::endl;
-    
+    std::cout << "Enter the items you want to farm (example: 1,3,6): ";
 	
     std::string user_input;
     std::getline(std::cin, user_input);
-    getc(stdin);
-	
     std::vector<int> user_choice;
     std::stringstream ss(user_input);
     int temp;
