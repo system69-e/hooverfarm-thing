@@ -7,6 +7,7 @@
 #include "request.h"
 #include "configmanagerroutine.h"
 #include "AutorestartClass.h"
+#include "roblox.h"
 
 // link libraries
 #ifdef _DEBUG
@@ -53,13 +54,12 @@ int main(int argc, char* argv[])
 	}
 
 	//-- make a requst to get the newest version of the script
-	Request* req = new Request("https://api.sightem.dev");
-	if (req->initalize() == 1) {
-		std::cout << "Error: Could not initialize curl" << std::endl;
+	Request req("https://api.sightem.dev");
+	if (req.initalize() == 1) {
+		std::cout << "Error: Could not initialize find newest version" << std::endl;
 		return 1;
 	}
-	Response res = req->get();
-
+	Response res = req.get();
 	std::cout << "Welcome to Hooverfarm's AIO tool" << std::endl;
 
 	//-- print options
