@@ -1,11 +1,13 @@
 #include "request.h"
 
-static size_t writeFunction(void* ptr, size_t size, size_t nmemb, std::string* data) {
+static size_t writeFunction(void* ptr, size_t size, size_t nmemb, std::string* data) 
+{
     data->append((char*)ptr, size * nmemb);
     return size * nmemb;
 }
 
-int Request::initalize() {
+int Request::initalize() 
+{
     CURL* localCurl = curl_easy_init();
     this->curl = localCurl;
     if (!this->curl) {
@@ -25,19 +27,22 @@ void Request::prepare() {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
 }
 
-Response Request::get() {
+Response Request::get() 
+{
     this->prepare();
     curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
     return this->execute();   
 }
 
-Response Request::post() {
+Response Request::post() 
+{
     this->prepare();
     curl_easy_setopt(curl, CURLOPT_POST, 1);
     return this->execute();
 }
 
-Response Request::execute() {
+Response Request::execute() 
+{
     Response response{};
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response.data);
