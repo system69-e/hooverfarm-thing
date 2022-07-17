@@ -4,7 +4,8 @@
 #include <string>
 #include "curl/curl.h"
 
-struct Response {
+struct Response 
+{
     CURLcode code;
     std::string data;
     std::string headers;
@@ -19,7 +20,8 @@ public:
 
     Request(std::string url, std::string data, curl_slist* headers) : url(url), data(data), headers(headers)  {}
 
-    ~Request() {
+    ~Request() 
+    {
         if(headers) curl_slist_free_all(headers);
         if(curl) curl_easy_cleanup(curl);
     }

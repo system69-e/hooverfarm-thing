@@ -35,13 +35,15 @@ bool AutorestartClass::findRoblox()
 
 	const auto snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
 
-	if (!Process32First(snapshot, &entry)) {
+	if (!Process32First(snapshot, &entry)) 
+	{
 		CloseHandle(snapshot);
 		return false;
 	}
 
 	do {
-		if (!_tcsicmp(entry.szExeFile, "RobloxPlayerBeta.exe")) {
+		if (!_tcsicmp(entry.szExeFile, "RobloxPlayerBeta.exe")) 
+		{
 			CloseHandle(snapshot);
 			return true;
 		}
@@ -127,14 +129,15 @@ void AutorestartClass::_usleep(int microseconds)
 std::string AutorestartClass::SHA256(const char* path)
 {
 	std::ifstream fp(path, std::ios::in | std::ios::binary);
-
-	if (!(fp.good())) {
+	
+	if (!(fp.good())) 
+	{
 		std::ostringstream os;
 		os << "cant open \"" << path << "\\";
 		system("pause");
 	}
 
-	const std::size_t buffer_size{ 1 << 12 };
+	const std::size_t buffer_size { 1 << 12 };
 	char buffer[buffer_size];
 
 	unsigned char hash[SHA256_DIGEST_LENGTH] = { 0 };
@@ -142,7 +145,8 @@ std::string AutorestartClass::SHA256(const char* path)
 	SHA256_CTX ctx;
 	SHA256_Init(&ctx);
 
-	while (fp.good()) {
+	while (fp.good()) 
+	{
 		fp.read(buffer, buffer_size);
 		SHA256_Update(&ctx, buffer, fp.gcount());
 	}
@@ -153,7 +157,8 @@ std::string AutorestartClass::SHA256(const char* path)
 	std::ostringstream os;
 	os << std::hex << std::setfill('0');
 
-	for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+	for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) 
+	{
 		os << std::setw(2) << static_cast<unsigned int>(hash[i]);
 	}
 
@@ -246,20 +251,36 @@ void AutorestartClass::start()
 		}
 		else
 		{
-			std::string username_string = username;
-
-
-			//-- get all folders of C:\Users\{user}\AppData\Local\Roblox\Versions
+			//-- get a vector of all folders present in C:\\Users
 			std::vector<std::string> folders;
-			for (auto& p : std::filesystem::directory_iterator("C:\\Users\\" + username_string + "\\AppData\\Local\\Roblox\\Versions"))
+			for (auto& p : std::filesystem::directory_iterator("C:\\Users"))
 			{
 				folders.push_back(p.path().string());
 			}
-			
-			//-- get the last element of the vector
-			std::string last_folder = folders.back();
 
-			std::string robloxplayerlauncher = '"' + last_folder + "\\RobloxPlayerLauncher.exe" + '"';;
+			//-- check which folders contains \AppData\Local\Roblox\, add its fuill path to a string
+			std::string pathf;
+			for (auto& p : folders)
+			{
+				if (std::filesystem::exists(p + "\\AppData\\Local\\Roblox\\"))
+				{
+					pathf = p + "\\AppData\\Local\\Roblox\\";
+				}
+			}
+
+			//-- get all folders present in the path + \Versions except .exe files
+			std::vector<std::string> Versions;
+			for (auto& p : std::filesystem::directory_iterator(pathf + "\Versions"))
+			{
+				if (p.path().extension() != ".exe")
+				{
+					Versions.push_back(p.path().string());
+				}
+			}
+
+			std::string path2 = Versions.back();
+
+			std::string robloxplayerlauncher = '"' + path2 + "\\RobloxPlayerLauncher.exe" + '"';
 
 			path = robloxplayerlauncher;
 		}

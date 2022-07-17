@@ -140,10 +140,12 @@
     <ClCompile Include="autorestartroutine.cpp" />
     <ClCompile Include="configmanagerroutine.cpp" />
     <ClCompile Include="plzwork.cpp" />
+    <ClCompile Include="request.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutorestartClass.h" />
     <ClInclude Include="configmanagerroutine.h" />
+    <ClInclude Include="request.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

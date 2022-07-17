@@ -53,12 +53,13 @@ int main(int argc, char* argv[])
 	}
 
 	//-- make a requst to get the newest version of the script
-	Request* req = new Request("https://api.sightem.dev");
-	if (req->initalize() == 1) {
+	Request req = Request("https://api.sightem.dev");
+	if (req.initalize() == 1) 
+	{
 		std::cout << "Error: Could not initialize curl" << std::endl;
 		return 1;
 	}
-	Response res = req->get();
+	Response res = req.get();
 
 	std::cout << "Welcome to Hooverfarm's AIO tool" << std::endl;
 
