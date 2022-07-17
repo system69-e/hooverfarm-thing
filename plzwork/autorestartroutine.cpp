@@ -173,13 +173,6 @@ void AutorestartClass::start()
 	
 	inputToFile();
 
-	//-- get current user windows username
-	TCHAR username[UNLEN + 1];
-	DWORD size = UNLEN + 1;
-	GetUserName((TCHAR*)username, &size);
-	std::string username_string = username;
-	
-
 	std::cout << "Are you using Synapse? (y/n)";
 	char answer;
 	std::cin >> answer;
@@ -284,6 +277,9 @@ void AutorestartClass::start()
 
 			path = robloxplayerlauncher;
 		}
+		
+		std::cout << path;
+		system("pause");
 		
 		srand(time(NULL));
 
