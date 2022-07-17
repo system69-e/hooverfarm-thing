@@ -111,10 +111,12 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>D:\lib\libcrypto.lib;D:\lib\libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,10 +142,14 @@
     <ClCompile Include="autorestartroutine.cpp" />
     <ClCompile Include="configmanagerroutine.cpp" />
     <ClCompile Include="plzwork.cpp" />
+    <ClCompile Include="request.cpp" />
+    <ClCompile Include="roblox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutorestartClass.h" />
     <ClInclude Include="configmanagerroutine.h" />
+    <ClInclude Include="request.h" />
+    <ClInclude Include="roblox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
