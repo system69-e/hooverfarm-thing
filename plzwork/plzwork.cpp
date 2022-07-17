@@ -4,10 +4,11 @@
 #include <fstream>
 #include <windows.h>
 
-#include "curl/curl.h"
+#include "request.h"
 #include "configmanagerroutine.h"
 #include "AutorestartClass.h"
 
+// link libraries
 #ifdef _DEBUG
 #pragma comment (lib, "curl/libcurl_a_debug.lib")
 #else
@@ -20,13 +21,6 @@
 #pragma comment (lib, "Crypt32.lib")
 #pragma comment (lib, "advapi32.lib")
 #pragma comment (lib, "User32.lib")
-
-static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
-}
-
 
 int main(int argc, char* argv[])
 {
@@ -58,32 +52,13 @@ int main(int argc, char* argv[])
 		SetWindowLong(GetConsoleWindow(), GWL_STYLE, GetWindowLong(GetConsoleWindow(), GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
 	}
 
-    //-- retrieve the contents of https://api.sightem.dev
-	std::string linkBuffer;
-
-	//-- curl stuff
-	CURL* curl;
-	CURLcode res;
-	curl = curl_easy_init();
-	if (curl)
-	{
-		curl_easy_setopt(curl, CURLOPT_URL, "https://api.sightem.dev");
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &linkBuffer);
-		res = curl_easy_perform(curl);
-		curl_easy_cleanup(curl);
-		if (res != CURLE_OK)
-		{
-			std::cout << "Failed to grab the newest version" << std::endl;
-			return 1;
-		}
-	}
-	else
-	{
-		std::cout << "Failed to grab the newest version" << std::endl;
+	//-- make a requst to get the newest version of the script
+	Request* req = new Request("https://api.sightem.dev");
+	if (req->initalize() == 1) {
+		std::cout << "Error: Could not initialize curl" << std::endl;
 		return 1;
 	}
-
+	Response res = req->get();
 
 	std::cout << "Welcome to Hooverfarm's AIO tool" << std::endl;
 
@@ -104,7 +79,7 @@ int main(int argc, char* argv[])
 	case 1:
 		system("cls");
 		ConfigmanagerClass Configmanager;
-		Configmanager.configManager(linkBuffer);
+		Configmanager.configManager(res.data);
 		break;
 	case 2:
 		//check if cookie.txt is present, if not make one
