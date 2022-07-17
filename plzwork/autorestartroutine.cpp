@@ -1,4 +1,5 @@
 #include "AutorestartClass.h"
+#include "roblox.h"
 #include <iostream>
 #include <windows.h>
 #include <Tlhelp32.h>
@@ -83,37 +84,6 @@ void AutorestartClass::killRoblox()
 	}
 }
 
-bool AutorestartClass::inputToFile()
-{
-	std::string filename = "gettoken.py";
-	std::ofstream outfile;
-	outfile.open(filename);
-
-	std::ifstream infile;
-	infile.open("cookie.txt");
-
-	std::string cookie;
-
-	std::getline(infile, cookie);
-	infile.close();
-
-    	const std::string script = "import requests\n"
-		"cookie = '" + cookie + "'\n"
-		"sess = requests.session()\n"
-		"sess.cookies['.ROBLOSECURITY'] = cookie\n"
-		"csrf = sess.post('https://auth.roblox.com/v1/authentication-ticket').headers.get('x-csrf-token')\n"
-		"sess.headers['x-csrf-token'] = csrf\n"
-		"authticket = sess.post('https://auth.roblox.com/v1/authentication-ticket', headers={'Referer':'www.roblox.com','Origin':'www.roblox.com'}).headers.get('rbx-authentication-ticket')\n"
-		"with open('tokens', 'w') as f:\n"
-    		"    f.write(csrf +'\\n')\n"
-    		"    f.write(authticket)";
-	
-	outfile << script;
-
-	return true;
-}
-
-
 void AutorestartClass::Log(const std::string& text, bool error)
 {
 	std::cout << (error ? " [ error ] " + text : " [ Autorestart ] " + text + "                                       ") << std::endl;
@@ -165,8 +135,6 @@ void AutorestartClass::start()
 {
 	std::cout << "How many minutes before restarting? (default is 20): ";
 	std::cin >> RestartTime;
-	
-	inputToFile();
 
 	//-- get current user windows username
 	TCHAR username[UNLEN + 1];
@@ -179,6 +147,12 @@ void AutorestartClass::start()
 	char answer;
 	std::cin >> answer;
 	
+	std::ifstream infile;
+	infile.open("cookie.txt");
+
+	std::string cookie;
+
+	std::getline(infile, cookie);
 
 	while (true)
 	{
@@ -187,24 +161,9 @@ void AutorestartClass::start()
 		Autorestart.unlockRoblox();
 
 		Autorestart.killRoblox();
-		
-		system("python gettoken.py");
 
-		std::string csrf, authticket;
-		std::ifstream myfile("tokens");
-		if (myfile.is_open())
-		{
-			getline(myfile, csrf);
-			getline(myfile, authticket);
-			myfile.close();
-		}
-		else
-		{
-			std::cout << "Unable to open file";
-			exit(0);
-		}
+		std::string authticket = getRobloxTicket(cookie);
 		
-	
 		std::string path;
 		if (answer == 'y')
 		{
@@ -230,7 +189,6 @@ void AutorestartClass::start()
 			{
 				hashes.push_back(SHA256(file.c_str()));
 			}
-
 
 			const std::string righthash = "40506136de9d0576fce7a09c9aab4b3076d29476056aac7540451e6daa7269b7";
 			std::string rightpath;
