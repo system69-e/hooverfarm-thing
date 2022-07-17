@@ -10,6 +10,9 @@
 #include <filesystem>
 #include <Lmcons.h>
 
+#pragma warning(disable : 4996
+// OpenSSL Library
+#include <openssl/sha.h>
 
 #ifdef _UNICODE
 typedef wchar_t TCHAR;
@@ -121,6 +124,43 @@ void AutorestartClass::_usleep(int microseconds)
 	std::this_thread::sleep_for(std::chrono::microseconds(microseconds));
 }
 
+std::string AutorestartClass::SHA256(const char* path)
+{
+	std::ifstream fp(path, std::ios::in | std::ios::binary);
+
+	if (!(fp.good())) {
+		std::ostringstream os;
+		os << "cant open \"" << path << "\\";
+		system("pause");
+	}
+
+	const std::size_t buffer_size{ 1 << 12 };
+	char buffer[buffer_size];
+
+	unsigned char hash[SHA256_DIGEST_LENGTH] = { 0 };
+
+	SHA256_CTX ctx;
+	SHA256_Init(&ctx);
+
+	while (fp.good()) {
+		fp.read(buffer, buffer_size);
+		SHA256_Update(&ctx, buffer, fp.gcount());
+	}
+
+	SHA256_Final(hash, &ctx);
+	fp.close();
+
+	std::ostringstream os;
+	os << std::hex << std::setfill('0');
+
+	for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+		os << std::setw(2) << static_cast<unsigned int>(hash[i]);
+	}
+
+	return os.str();
+}
+
+
 void AutorestartClass::start()
 {
 	std::cout << "How many minutes before restarting? (default is 20): ";
@@ -172,7 +212,37 @@ void AutorestartClass::start()
 			path = std::filesystem::current_path().string();
 			path.erase(path.find("workspace"), 9);
 
-			path += "bin\\40tjFC.exe";
+			path += "bin";
+
+			//index every exe file in the bin folder and store them in a vector
+			std::vector<std::string> files;
+			for (const auto& entry : std::filesystem::directory_iterator(path)) 
+			{
+				if (entry.path().extension() == ".exe") 
+				{
+					files.push_back(entry.path().string());
+				}
+			}
+
+			//-- hash every exe file in the bin folder and store them in a vector
+			std::vector<std::string> hashes;
+			for (const auto& file : files) 
+			{
+				hashes.push_back(SHA256(file.c_str()));
+			}
+
+
+			const std::string righthash = "40506136de9d0576fce7a09c9aab4b3076d29476056aac7540451e6daa7269b7";
+			std::string rightpath;
+			//compare the hashes against righthash and store the path of the right exe file in rightpath
+			for (int i = 0; i < hashes.size(); i++) 
+			{
+				if (hashes[i] == righthash) 
+				{
+					rightpath = files[i];
+				}
+			}
+			path = rightpath;
 		}
 		else
 		{
