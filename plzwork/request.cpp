@@ -16,12 +16,15 @@ int Request::initalize()
     return 0;
 }
 
-void Request::prepare() 
-{
+void Request::prepare() {
+#ifdef _DEBUG
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+#endif
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     // set header if there is one
     if(headers) curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-    if(!data.empty()) (curl, CURLOPT_POSTFIELDS, data.c_str());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, data.size());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
 }
 
 Response Request::get() 

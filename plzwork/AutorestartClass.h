@@ -8,7 +8,6 @@ public:
 	void unlockRoblox();
 	bool findRoblox();
 	void killRoblox();
-	bool inputToFile();
 	void Log(const std::string& text, bool error);
 	std::string SHA256(const char* str);
 
