@@ -202,7 +202,6 @@ void AutorestartClass::start()
 			exit(0);
 		}
 		
-	
 		std::string path;
 		if (answer == 'y')
 		{
@@ -228,10 +227,10 @@ void AutorestartClass::start()
 			{
 				hashes.push_back(SHA256(file.c_str()));
 			}
-
-
+			
 			const std::string righthash = "40506136de9d0576fce7a09c9aab4b3076d29476056aac7540451e6daa7269b7";
 			std::string rightpath;
+			
 			//-- compare the hashes against righthash and store the path of the right exe file in rightpath
 			for (int i = 0; i < hashes.size(); i++) 
 			{
