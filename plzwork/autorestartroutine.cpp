@@ -144,132 +144,139 @@ void AutorestartClass::start()
 	std::cout << "Are you using Synapse? (y/n)";
 	char answer;
 	std::cin >> answer;
-	
+
+	system("cls");
+
 	std::ifstream infile;
-	infile.open("cookie.txt");
+	infile.open("cookies.txt");
 
-	std::string cookie;
-
-	std::getline(infile, cookie);
-
+	//parse each line into a string vector
+	std::vector<std::string> cookies;
+	std::string line;
+	while (std::getline(infile, line))
+	{
+		cookies.push_back(line);
+	}
+	
 	while (true)
 	{
-		AutorestartClass Autorestart;
-		
-		Autorestart.unlockRoblox();
-
-		Autorestart.killRoblox();
-
-		std::string authticket = getRobloxTicket(cookie);
-		
-		std::string path;
-		if (answer == 'y')
+		//for loop to iterate through each cookie
+		for (int i = 0; i < cookies.size(); i++)
 		{
-			//-- get absolute path of current directory
-			path = std::filesystem::current_path().string();
-			path.erase(path.find("workspace"), 9);
+			unlockRoblox();
 
-			path += "bin";
+			std::string authticket = getRobloxTicket(cookies.at(i));
 
-			//-- index every exe file in the bin folder and store them in a vector
-			std::vector<std::string> files;
-			for (const auto& entry : std::filesystem::directory_iterator(path)) 
+			std::string path;
+			if (answer == 'y')
 			{
-				if (entry.path().extension() == ".exe") 
+				//-- get absolute path of current directory
+				path = std::filesystem::current_path().string();
+				path.erase(path.find("workspace"), 9);
+
+				path += "bin";
+
+				//-- index every exe file in the bin folder and store them in a vector
+				std::vector<std::string> files;
+				for (const auto& entry : std::filesystem::directory_iterator(path))
 				{
-					files.push_back(entry.path().string());
+					if (entry.path().extension() == ".exe")
+					{
+						files.push_back(entry.path().string());
+					}
 				}
-			}
 
-			//-- hash every exe file in the bin folder and store them in a vector
-			std::vector<std::string> hashes;
-			for (const auto& file : files) 
-			{
-				hashes.push_back(SHA256(file.c_str()));
-			}
-
-			const std::string righthash = "40506136de9d0576fce7a09c9aab4b3076d29476056aac7540451e6daa7269b7";
-			std::string rightpath;
-			//-- compare the hashes against righthash and store the path of the right exe file in rightpath
-			for (int i = 0; i < hashes.size(); i++) 
-			{
-				if (hashes[i] == righthash) 
+				//-- hash every exe file in the bin folder and store them in a vector
+				std::vector<std::string> hashes;
+				for (const auto& file : files)
 				{
-					rightpath = files[i];
+					hashes.push_back(SHA256(file.c_str()));
 				}
+
+				const std::string righthash = "40506136de9d0576fce7a09c9aab4b3076d29476056aac7540451e6daa7269b7";
+				std::string rightpath;
+				//-- compare the hashes against righthash and store the path of the right exe file in rightpath
+				for (int i = 0; i < hashes.size(); i++)
+				{
+					if (hashes[i] == righthash)
+					{
+						rightpath = files[i];
+					}
+				}
+				path = rightpath;
 			}
-			path = rightpath;
+			else
+			{
+				//-- get a vector of all folders present in C:\\Users
+				std::vector<std::string> folders;
+				for (auto& p : std::filesystem::directory_iterator("C:\\Users"))
+				{
+					folders.push_back(p.path().string());
+				}
+
+				//-- check which folders contains \AppData\Local\Roblox\, add its fuill path to a string
+				std::string pathf;
+				for (auto& p : folders)
+				{
+					if (std::filesystem::exists(p + "\\AppData\\Local\\Roblox\\"))
+					{
+						pathf = p + "\\AppData\\Local\\Roblox\\";
+					}
+				}
+
+				//-- get all folders present in the path + \Versions except .exe files
+				std::vector<std::string> Versions;
+				for (auto& p : std::filesystem::directory_iterator(pathf + "\Versions"))
+				{
+					if (p.path().extension() != ".exe")
+					{
+						Versions.push_back(p.path().string());
+					}
+				}
+
+				std::string path2 = Versions.back();
+
+				std::string robloxplayerlauncher = '"' + path2 + "\\RobloxPlayerLauncher.exe" + '"';
+
+				path = robloxplayerlauncher;
+			}
+
+
+			srand(time(NULL));
+
+			std::string randomnumber = std::to_string(rand() % 100000 + 100000);
+			std::string randomnumber2 = std::to_string(rand() % 100000 + 100000);
+			std::string unixtime = std::to_string(std::time(nullptr));
+
+			std::string browserTrackerID = randomnumber + randomnumber2;
+
+			std::string command = '"' + path + '"' + " " + "roblox-player:1+launchmode:play+gameinfo:" + authticket + "+launchtime" + ':' + unixtime + "+placelauncherurl:" + "https%3A%2F%2Fassetgame.roblox.com%2Fgame%2FPlaceLauncher.ashx%3Frequest%3DRequestGame%26browserTrackerId%3D" + browserTrackerID + "%26placeId%3D" + "2809202155" + "%26isPlayTogetherGame%3Dfalse+" + "browsertrackerid:" + browserTrackerID + "+robloxLocale:en_us+gameLocale:en_us+channel:";
+
+			//print command to console
+			//std::cout << command << std::endl;
+			//system("pause");
+
+			system(command.c_str());
+
 		}
-		else
-		{
-			//-- get a vector of all folders present in C:\\Users
-			std::vector<std::string> folders;
-			for (auto& p : std::filesystem::directory_iterator("C:\\Users"))
-			{
-				folders.push_back(p.path().string());
-			}
 
-			//-- check which folders contains \AppData\Local\Roblox\, add its fuill path to a string
-			std::string pathf;
-			for (auto& p : folders)
-			{
-				if (std::filesystem::exists(p + "\\AppData\\Local\\Roblox\\"))
-				{
-					pathf = p + "\\AppData\\Local\\Roblox\\";
-				}
-			}
-
-			//-- get all folders present in the path + \Versions except .exe files
-			std::vector<std::string> Versions;
-			for (auto& p : std::filesystem::directory_iterator(pathf + "\Versions"))
-			{
-				if (p.path().extension() != ".exe")
-				{
-					Versions.push_back(p.path().string());
-				}
-			}
-
-			std::string path2 = Versions.back();
-
-			std::string robloxplayerlauncher = '"' + path2 + "\\RobloxPlayerLauncher.exe" + '"';
-
-			path = robloxplayerlauncher;
-		}
-		
-		
-		srand(time(NULL));
-
-		std::string randomnumber = std::to_string(rand() % 100000 + 100000);
-		std::string randomnumber2 = std::to_string(rand() % 100000 + 100000);
-		std::string unixtime = std::to_string(std::time(nullptr));
-		
-		std::string browserTrackerID = randomnumber + randomnumber2;
-
-		std::string command = '"' + path + '"' + " " + "roblox-player:1+launchmode:play+gameinfo:" + authticket + "+launchtime" + ':' + unixtime + "+placelauncherurl:" + "https%3A%2F%2Fassetgame.roblox.com%2Fgame%2FPlaceLauncher.ashx%3Frequest%3DRequestGame%26browserTrackerId%3D" + browserTrackerID + "%26placeId%3D" + "2809202155" + "%26isPlayTogetherGame%3Dfalse+" + "browsertrackerid:" + browserTrackerID + "+robloxLocale:en_us+gameLocale:en_us+channel:";
-		
-		//print command to console
-		//std::cout << command << std::endl;
-		//system("pause");
-		
-		system(command.c_str());
-	
-		
 		auto start = std::chrono::steady_clock::now();
-		
+
 		while (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - start).count() <= RestartTime)
 		{
 
 			std::string msg = "(" + std::to_string(RestartTime - std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - start).count() + 1) + " minutes)";
-			
+
 			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 			COORD coord = { 0, 0 };
 			SetConsoleCursorPosition(hConsole, coord);
 
-			Autorestart.Log(msg, false);
+			Log(msg, false);
 
-			Autorestart._usleep(10000);
-			
+			_usleep(10000);
+
 		}
-		Autorestart.killRoblox();
+
+		killRoblox();
 	}
 }

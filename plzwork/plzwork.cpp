@@ -83,11 +83,11 @@ int main(int argc, char* argv[])
 		break;
 	case 2:
 		//check if cookie.txt is present, if not make one
-		std::ifstream cookieFile("cookie.txt");
+		std::ifstream cookieFile("cookies.txt");
 		if (!cookieFile.good())
 		{
 			std::cout << "Cookie file not found, creating one" << std::endl;
-			std::ofstream cookieFile("cookie.txt");
+			std::ofstream cookieFile("cookies.txt");
 			cookieFile << "";
 			cookieFile.close();
 			return 1;
