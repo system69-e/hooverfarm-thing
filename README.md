@@ -7,7 +7,7 @@ Currently it officially supports Syanpse, Krnl and Scriptware, because it relies
 
 Simply put the provided binary in your `workspace` folder and run it.
 
-## How to use Autorestart
+## How to use Autorestart💿
 1. Download the provided .exe file from [Releases](https://github.com/system69-e/hooverfarm-thing/releases)  
 2. Move the downloaded file to your workspace folder
 3. When you run the file for the first time and choose the second option, a new text file will be created for you called `cookie`  
