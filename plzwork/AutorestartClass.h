@@ -12,4 +12,5 @@ public:
 	std::string SHA256(const char* str);
 
 	void _usleep(int microseconds);
+	void _sleep(int miliseconds);
 };

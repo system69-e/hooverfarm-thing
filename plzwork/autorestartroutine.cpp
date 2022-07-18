@@ -95,6 +95,10 @@ void AutorestartClass::_usleep(int microseconds)
 {
 	std::this_thread::sleep_for(std::chrono::microseconds(microseconds));
 }
+void AutorestartClass::_sleep(int miliseconds)
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(miliseconds));
+}
 
 std::string AutorestartClass::SHA256(const char* path)
 {
@@ -278,5 +282,6 @@ void AutorestartClass::start()
 		}
 
 		killRoblox();
+		_sleep(5000);
 	}
 }
