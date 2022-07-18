@@ -236,8 +236,6 @@ void AutorestartClass::start()
 			path = robloxplayerlauncher;
 		}
 		
-		std::cout << path;
-		system("pause");
 		
 		srand(time(NULL));
 
