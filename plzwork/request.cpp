@@ -40,6 +40,14 @@ Response Request::post()
     curl_easy_setopt(curl, CURLOPT_POST, 1);
     return this->execute();
 }
+/*
+Response Request::Delete()
+{
+    this->prepare();
+	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+	return this->execute();
+}
+*/
 
 Response Request::execute() 
 {

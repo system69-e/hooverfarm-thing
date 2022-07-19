@@ -29,7 +29,8 @@ public:
     int initalize();
     Response post();
     Response get();
-
+    Response Delete();
+	
 private:
     std::string url;
     std::string data;

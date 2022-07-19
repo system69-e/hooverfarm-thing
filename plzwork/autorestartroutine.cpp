@@ -174,12 +174,54 @@ void AutorestartClass::start()
 			std::string path;
 			if (answer == 'y')
 			{
-				//-- get absolute path of current directory
+
+				//check if the current directory is called workspace
+				std::string current_path = std::filesystem::current_path().string();
+				
+				if (current_path.find("workspace") == std::string::npos)
+				{
+					//-- read the first line of config.ini
+					std::ifstream config("config.ini");
+					std::string line;
+					std::getline(config, line);
+
+
+					//-- extract the parent folder of line by removing \workspace
+					std::string parent = line.substr(0, line.find_last_of("\\"));
+
+					//-- iterate through the parent folder and find the bin folder
+					std::filesystem::directory_iterator end_iter;
+					for (std::filesystem::directory_iterator dir_iter(parent); dir_iter != end_iter; ++dir_iter)
+					{
+						if (std::filesystem::is_directory(dir_iter->status()))
+						{
+							//-- if the folder is bin, set the path to the bin folder
+							if (dir_iter->path().filename() == "bin")
+							{
+								path = dir_iter->path().string();
+							}
+						}
+					}
+				}
+				else
+				{
+					//-- get absolute path of current directory
 				path = std::filesystem::current_path().string();
 				path.erase(path.find("workspace"), 9);
 
 				path += "bin";
 
+				//-- index every exe file in the bin folder and store them in a vector
+				std::vector<std::string> files;
+				for (const auto& entry : std::filesystem::directory_iterator(path))
+				{
+					if (entry.path().extension() == ".exe")
+					{
+						files.push_back(entry.path().string());
+					}
+				}
+				}
+				
 				//-- index every exe file in the bin folder and store them in a vector
 				std::vector<std::string> files;
 				for (const auto& entry : std::filesystem::directory_iterator(path))
@@ -205,6 +247,12 @@ void AutorestartClass::start()
 					if (hashes[i] == righthash)
 					{
 						rightpath = files[i];
+					}
+					else
+					{
+						Log("You probably have not enabled Autolaunch on synapse.", 1);
+						system("pause");
+						exit(0);
 					}
 				}
 				path = rightpath;
