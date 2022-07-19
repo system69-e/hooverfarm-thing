@@ -1,12 +1,14 @@
 #include "terminal.h"
 #include <Windows.h>
 
-void wait() {
+void wait() 
+{
 	printf("Press enter to continue...\n");
 	getchar(); // wait for the user to press enter
 }
 
-void clear() {
+void clear() 
+{
 	// clear screen
     CONSOLE_SCREEN_BUFFER_INFO s;
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -15,5 +17,4 @@ void clear() {
     FillConsoleOutputCharacter(console, ' ', cells, {0,0}, &written);
     FillConsoleOutputAttribute(console, s.wAttributes, cells, { 0,0 }, &written);
     SetConsoleCursorPosition(console, {0,0});
-	
 }

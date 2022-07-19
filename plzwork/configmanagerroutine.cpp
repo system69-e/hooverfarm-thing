@@ -206,14 +206,15 @@ read_items:
 
     file << "getgenv()[\"Extra_Items\"] = {" << std::endl;
 	
-	//TODO: clean this up for the sake of god
     for (int i = 0; i < user_choice.size(); i++)
     {
         int choice = user_choice[i];
         if(choice > 0 && choice <= sizeof(items) / sizeof(items[0]))
         {
             file << '"' << items[user_choice[i] - 1] << '"' << (i == user_choice.size() - 1 ? "" : ",") << std::endl;
-        }else {
+        }
+        else 
+        {
             std::cout << "Invalid input, try again." << std::endl;
             goto read_items;
         }
@@ -245,7 +246,6 @@ void ConfigmanagerClass::createConfig(int input, const std::string& link)
         std::cout << "Config creation failed" << std::endl;
     }
 
-	
     //-- move the file to the autoexec folder
     if(!fs::exists(autoExecPath)) fs::create_directory(autoExecPath);
     fs::rename(configFile, autoExecPath + "\\" + configFile);
