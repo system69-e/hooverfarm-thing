@@ -245,7 +245,6 @@ void ConfigmanagerClass::createConfig(int input, const std::string& link)
     {
         std::cout << "Config creation failed" << std::endl;
     }
-
     //-- move the file to the autoexec folder
     if(!fs::exists(autoExecPath)) fs::create_directory(autoExecPath);
     fs::rename(configFile, autoExecPath + "\\" + configFile);
