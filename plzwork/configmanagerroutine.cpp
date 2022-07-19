@@ -247,7 +247,7 @@ void ConfigmanagerClass::createConfig(int input, const std::string& link)
 
 	
     //-- move the file to autoexec
-    fs::rename(configFile, autoExecPath + "/" +  configFile);
+    fs::rename(configFile, autoExecPath + "/" + configFile);
     clear();
 }
 
