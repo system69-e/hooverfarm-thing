@@ -49,18 +49,21 @@ void AutorestartClass::killRoblox()
 		printf("Process32First() failed: %d.\n", GetLastError());
 	}
 	do
-	{
-		if (pe32.th32ParentProcessID == this->robloxProcess.dwProcessId)
-		{
-			HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pe32.th32ProcessID);
-			if (hProcess)
-			{
-				TerminateProcess(hProcess, 0);
-				CloseHandle(hProcess);
+	{	
+		for (const PROCESS_INFORMATION& pi : this->robloxProcesses) {
+			if(pe32.th32ParentProcessID == pi.dwProcessId) {
+				HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pe32.th32ProcessID);
+				if (hProcess)
+				{
+					TerminateProcess(hProcess, 0);
+					CloseHandle(hProcess);
+				}
 			}
 		}
 	} while (Process32Next(hProcessSnap, &pe32));
+	this->robloxProcesses.clear();
 	Autorestart.Log("Killed Roblox", false);
+	CloseHandle(hProcessSnap);
 
 	return;
 }
@@ -127,7 +130,7 @@ void AutorestartClass::start(bool forceminimize)
 	char answer;
 	std::cin >> answer;
 
-	wait();
+	clear();
 
 	std::ifstream infile;
 	infile.open("cookies.txt");
@@ -276,8 +279,7 @@ void AutorestartClass::start(bool forceminimize)
 				printf("CreateProcess() failed: %d.\n", GetLastError());
 			}
 			WaitForSingleObject(pi.hProcess, INFINITE);
-			this->robloxProcess = pi;
-			clear();
+			this->robloxProcesses.push_back(pi);
 		}
 
 		auto start = std::chrono::steady_clock::now();
