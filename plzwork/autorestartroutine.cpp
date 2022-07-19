@@ -11,7 +11,7 @@
 #include <filesystem>
 #include <Lmcons.h>
 
-#pragma warning(disable : 4996
+#pragma warning(disable : 4996)
 // OpenSSL Library
 #include <openssl/sha.h>
 
@@ -221,7 +221,7 @@ void AutorestartClass::start()
 
 			//-- get all folders present in the path + \Versions except .exe files
 			std::vector<std::string> Versions;
-			for (auto& p : std::filesystem::directory_iterator(pathf + "\Versions"))
+			for (auto& p : std::filesystem::directory_iterator(pathf + "\\Versions"))
 			{
 				if (p.path().extension() != ".exe")
 				{
@@ -239,7 +239,7 @@ void AutorestartClass::start()
 		std::cout << path;
 		system("pause");
 		
-		srand(time(NULL));
+		srand((unsigned int) time(NULL));
 
 		std::string randomnumber = std::to_string(rand() % 100000 + 100000);
 		std::string randomnumber2 = std::to_string(rand() % 100000 + 100000);
