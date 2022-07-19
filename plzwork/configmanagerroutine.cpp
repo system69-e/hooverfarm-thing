@@ -4,7 +4,11 @@
 #include <limits>
 #include <vector>
 #include <sstream>
+#include <filesystem>
 
+namespace fs = std::filesystem;
+
+#include "terminal.h"
 #include "configmanagerroutine.h"
 
 struct Config
@@ -50,13 +54,20 @@ const std::string configNames[]
   "Pity farm only",
 };
 
+const std::string items[] {
+    "Rib Cage of The Saint's Corpse",
+    "Mysterious Arrow",
+    "Pure Rokakaka",
+    "Lucky Arrow",
+    "Gold Coin",
+    "Rokakaka",
+};
+
 #define option(name) "getgenv()[\"" << #name << "\"] = " << config.name << std::endl; 
 #define bool_option(name) "getgenv()[\"" << #name << "\"] = " << (config.name ? "true" : "false") << std::endl;
 #define named_option(name, value) "[\"" << #name << "\"] = " << config.value << std::endl;
 #define named_string_option(name, value) "[\"" << #name << "\"] = " << '"' << config.value << '"'<< std::endl;
 #define named_bool_option(name, value) "[\"" << #name << "\"] = " << (config.value ? "true" : "false") << ',' << std::endl;
-
-
 
 bool inputToFile(const std::string& link, Config config = configurations[0])
 {
@@ -93,7 +104,7 @@ read:
             f = 2.0f;
         else f = std::stof(buffer);
     }
-    catch (std::exception& e)
+    catch (...)
     {
         std::cout << "Invalid input, try again." << std::endl;
         goto read;
@@ -131,13 +142,12 @@ normal:
 
     */
     //-- actually handles the input to the file
+read_items:
     std::cout << "Items to farm: " << std::endl;
-    std::cout << "1.Rib Cage of The Saint's Corpse" << std::endl;
-    std::cout << "2.Mysterious Arrow" << std::endl;
-    std::cout << "3.Pure Rokakaka" << std::endl;
-    std::cout << "4 Lucky Arrow" << std::endl;
-    std::cout << "5.Gold Coin" << std::endl;
-    std::cout << "6.Rokakaka" << std::endl;
+    for(int i = 0; i < sizeof(items) / sizeof(items[0]); i++)
+    {
+        std::cout << i + 1 << "." << items[i] << std::endl;
+    }
     std::cout << "Enter the items you want to farm (example: 1,3,6): ";
 	
     std::string user_input;
@@ -176,35 +186,13 @@ normal:
 	//TODO: clean this up for the sake of god
     for (int i = 0; i < user_choice.size(); i++)
     {
-        switch (user_choice[i])
+        int choice = user_choice[i];
+        if(choice > 0 && choice <= sizeof(items) / sizeof(items[0]))
         {
-        case 1:
-			if (i == user_choice.size() - 1) file << "\"Rib Cage of The Saint's Corpse\"" << std::endl;
-			else file << "\"Rib Cage of The Saint's Corpse\"," << std::endl;
-			break;
-        case 2:
-			if (i == user_choice.size() - 1) file << "\"Mysterious Arrow\"" << std::endl;
-			else file << "\"Mysterious Arrow\"," << std::endl;
-            break;
-        case 3:
-			if (i == user_choice.size() - 1) file << "\"Pure Rokakaka\"" << std::endl;
-			else file << "\"Pure Rokakaka\"," << std::endl;
-            break;
-        case 4:
-			if (i == user_choice.size() - 1) file << "\"Lucky Arrow\"" << std::endl;
-			else file << "\"Lucky Arrow\"," << std::endl;
-            break;
-        case 5:
-	        if (i == user_choice.size() - 1) file << "\"Gold Coin\"" << std::endl;
-			else file << "\"Gold Coin\"," << std::endl;
-            break;
-        case 6:
-			if (i == user_choice.size() - 1) file << "\"Rokakaka\"" << std::endl;
-			else file << "\"Rokakaka\"," << std::endl;
-            break;
-        default:
-            std::cout << "Invalid input\n";
-            system("pause");
+            file << '"' << items[user_choice[i] - 1] << '"' << (i == user_choice.size() - 1 ? "" : ",") << std::endl;
+        }else {
+            std::cout << "Invalid input, try again." << std::endl;
+            goto read_items;
         }
     }
 
@@ -239,8 +227,8 @@ void ConfigmanagerClass::createConfig(int input, const std::string& link)
     }
 
     //-- move the file to autoexec
-    system(("move " + configFile + " " + autoExecPath).c_str());
-    system("cls");
+    fs::rename(configFile, autoExecPath + "/" +  configFile);
+    clear();
 }
 
 bool ConfigmanagerClass::checkConfig()
