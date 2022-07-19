@@ -248,12 +248,14 @@ void AutorestartClass::start()
 					{
 						rightpath = files[i];
 					}
+					/*
 					else
 					{
 						Log("You probably have not enabled Autolaunch on synapse.", 1);
 						system("pause");
 						exit(0);
 					}
+					*/
 				}
 				path = rightpath;
 			}

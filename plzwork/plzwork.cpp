@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <Lmcons.h>
 
+
 #include "request.h"
 #include "configmanagerroutine.h"
 #include "AutorestartClass.h"
@@ -24,6 +25,7 @@
 #pragma comment (lib, "Crypt32.lib")
 #pragma comment (lib, "advapi32.lib")
 #pragma comment (lib, "User32.lib")
+
 
 bool val_func(const fs::directory_entry& entry);
 void createcfg();
@@ -110,7 +112,7 @@ int main(int argc, char* argv[])
 					std::cout << i << ": " << ctx->results[i].string() << std::endl;
 					outloop++;
 				}
-				std::cout << outloop << ": None of these results are correct";
+				std::cout << outloop << ": None of these results are correct" << std::endl;
 
 				std::cout << "Select a workspace: " << std::endl;
 				int selection = 0;
