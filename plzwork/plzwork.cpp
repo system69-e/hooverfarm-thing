@@ -10,6 +10,7 @@
 #include "configmanagerroutine.h"
 #include "AutorestartClass.h"
 #include "roblox.h"
+#include "terminal.h"
 #include "folder_search.h"
 
 // link libraries
@@ -30,7 +31,6 @@
 bool val_func(const fs::directory_entry& entry);
 void createcfg();
 std::vector<std::string> get_drives();
-
 
 int main(int argc, char* argv[])
 {
@@ -91,7 +91,12 @@ int main(int argc, char* argv[])
 			ctx->search_one = false;
 			ctx->results = std::vector<fs::path>();
 			
-			start_deep_traverse_search("C:\\Users\\" + username_str + "\\Downloads", ctx, 2);
+			try {
+				start_deep_traverse_search(std::filesystem::current_path(), ctx, 2);
+			}
+			catch (const std::exception e) {
+				std::cout << "Fatal file system error occured: " << e.what() << std::endl;
+			}
 			if (ctx->results.size() == 0)
 			{
 				//-- get a list of all drives
@@ -108,8 +113,8 @@ int main(int argc, char* argv[])
 				else
 				{
 					std::cout << "No workspace folder was located.";
-					system("pause");
-					exit(0);
+					wait();
+					return 0;
 				}
 			}
 
@@ -132,7 +137,7 @@ int main(int argc, char* argv[])
 				if (selection == outloop)
 				{
 					std::cout << "No workspace selected, please manually move the exe to your workspace folder" << std::endl;
-					system("pause");
+					wait();
 					return 0;
 				}
 
@@ -162,7 +167,7 @@ int main(int argc, char* argv[])
 		if (config_path.empty())
 		{
 			std::cout << "Config file is empty, please manually move the exe to your workspace folder" << std::endl;
-			system("pause");
+			wait();
 			return 0;
 		}
 	}
@@ -189,7 +194,7 @@ int main(int argc, char* argv[])
 	switch (choice)
 	{
 	case 1:
-		system("cls");
+		clear();
 		ConfigmanagerClass Configmanager;
 		Configmanager.configManager(res.data);
 		break;

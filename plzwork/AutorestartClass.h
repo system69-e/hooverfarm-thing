@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <Windows.h>
 
 class AutorestartClass
 {
@@ -13,4 +14,7 @@ public:
 
 	void _usleep(int microseconds);
 	void _sleep(int miliseconds);
+
+private:
+	PROCESS_INFORMATION robloxProcess{};
 };
