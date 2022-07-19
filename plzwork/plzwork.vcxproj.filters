@@ -30,6 +30,12 @@
     <ClCompile Include="roblox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="folder_search.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="terminal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="configmanagerroutine.h">
@@ -42,6 +48,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="roblox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="folder_search.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="terminal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

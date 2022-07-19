@@ -10,6 +10,7 @@
 #include "configmanagerroutine.h"
 #include "AutorestartClass.h"
 #include "roblox.h"
+#include "terminal.h"
 #include "folder_search.h"
 
 // link libraries
@@ -112,8 +113,8 @@ int main(int argc, char* argv[])
 				else
 				{
 					std::cout << "No workspace folder was located.";
-					system("pause");
-					exit(0);
+					wait();
+					return 0;
 				}
 			}
 
@@ -136,7 +137,7 @@ int main(int argc, char* argv[])
 				if (selection == outloop)
 				{
 					std::cout << "No workspace selected, please manually move the exe to your workspace folder" << std::endl;
-					system("pause");
+					wait();
 					return 0;
 				}
 
@@ -166,7 +167,7 @@ int main(int argc, char* argv[])
 		if (config_path.empty())
 		{
 			std::cout << "Config file is empty, please manually move the exe to your workspace folder" << std::endl;
-			system("pause");
+			wait();
 			return 0;
 		}
 	}
@@ -193,7 +194,7 @@ int main(int argc, char* argv[])
 	switch (choice)
 	{
 	case 1:
-		system("cls");
+		clear();
 		ConfigmanagerClass Configmanager;
 		Configmanager.configManager(res.data);
 		break;

@@ -1,5 +1,6 @@
 #include "AutorestartClass.h"
 #include "roblox.h"
+#include "terminal.h"
 #include <iostream>
 #include <windows.h>
 #include <Tlhelp32.h>
@@ -21,7 +22,7 @@ typedef wchar_t TCHAR;
 typedef char TCHAR;
 #endif // _UNICODE
 
-typedef const TCHAR* LPCTSTR;
+typedef const TCHAR *LPCTSTR;
 
 int RestartTime = 20;
 void AutorestartClass::unlockRoblox()
@@ -29,64 +30,42 @@ void AutorestartClass::unlockRoblox()
 	CreateMutex(NULL, TRUE, "ROBLOX_singletonMutex");
 }
 
-bool AutorestartClass::findRoblox()
-{
-	PROCESSENTRY32 entry;
-	entry.dwSize = sizeof(PROCESSENTRY32);
-
-	const auto snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-
-	if (!Process32First(snapshot, &entry)) 
-	{
-		CloseHandle(snapshot);
-		return false;
-	}
-
-	do {
-		if (!_tcsicmp(entry.szExeFile, "RobloxPlayerBeta.exe")) 
-		{
-			CloseHandle(snapshot);
-			return true;
-		}
-	} while (Process32Next(snapshot, &entry));
-
-	CloseHandle(snapshot);
-	return false;
-}
-
 void AutorestartClass::killRoblox()
 {
-	system("cls");
+	clear();
 	AutorestartClass Autorestart;
 	Autorestart.Log("Killing Roblox", false);
-	bool found = AutorestartClass::findRoblox() ? true : false;
-	if (found) 
+	// now get all the child processes of the main process
+	HANDLE hProcessSnap;
+	PROCESSENTRY32 pe32;
+	hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (hProcessSnap == INVALID_HANDLE_VALUE)
 	{
-		HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
-		PROCESSENTRY32 pEntry;
-		
-		pEntry.dwSize = sizeof(pEntry);
-		BOOL hRes = Process32First(hSnapShot, &pEntry);
-		while (hRes) 
-		{
-			if (strcmp(pEntry.szExeFile, "RobloxPlayerBeta.exe") == 0) 
-			{
-				HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD)pEntry.th32ProcessID);
-				
-				if (hProcess != NULL) 
-				{
-					TerminateProcess(hProcess, 9);
-					CloseHandle(hProcess);
-				}
-				
-			}
-			hRes = Process32Next(hSnapShot, &pEntry);
-		}
-		CloseHandle(hSnapShot);
+		printf("CreateToolhelp32Snapshot() failed: %d.\n", GetLastError());
 	}
+	pe32.dwSize = sizeof(PROCESSENTRY32);
+	if (!Process32First(hProcessSnap, &pe32))
+	{
+		printf("Process32First() failed: %d.\n", GetLastError());
+	}
+	do
+	{
+		if (pe32.th32ParentProcessID == this->robloxProcess.dwProcessId)
+		{
+			HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pe32.th32ProcessID);
+			if (hProcess)
+			{
+				TerminateProcess(hProcess, 0);
+				CloseHandle(hProcess);
+			}
+		}
+	} while (Process32Next(hProcessSnap, &pe32));
+	Autorestart.Log("Killed Roblox", false);
+
+	return;
 }
 
-void AutorestartClass::Log(const std::string& text, bool error)
+void AutorestartClass::Log(const std::string &text, bool error)
 {
 	std::cout << (error ? " [ error ] " + text : " [ Autorestart ] " + text + "                                       ") << std::endl;
 }
@@ -100,26 +79,26 @@ void AutorestartClass::_sleep(int miliseconds)
 	std::this_thread::sleep_for(std::chrono::milliseconds(miliseconds));
 }
 
-std::string AutorestartClass::SHA256(const char* path)
+std::string AutorestartClass::SHA256(const char *path)
 {
 	std::ifstream fp(path, std::ios::in | std::ios::binary);
-	
-	if (!(fp.good())) 
+
+	if (!(fp.good()))
 	{
 		std::ostringstream os;
 		os << "cant open \"" << path << "\\";
-		system("pause");
+		wait();
 	}
 
-	const std::size_t buffer_size { 1 << 12 };
+	const std::size_t buffer_size{1 << 12};
 	char buffer[buffer_size];
 
-	unsigned char hash[SHA256_DIGEST_LENGTH] = { 0 };
+	unsigned char hash[SHA256_DIGEST_LENGTH] = {0};
 
 	SHA256_CTX ctx;
 	SHA256_Init(&ctx);
 
-	while (fp.good()) 
+	while (fp.good())
 	{
 		fp.read(buffer, buffer_size);
 		SHA256_Update(&ctx, buffer, fp.gcount());
@@ -131,14 +110,13 @@ std::string AutorestartClass::SHA256(const char* path)
 	std::ostringstream os;
 	os << std::hex << std::setfill('0');
 
-	for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) 
+	for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i)
 	{
 		os << std::setw(2) << static_cast<unsigned int>(hash[i]);
 	}
 
 	return os.str();
 }
-
 
 void AutorestartClass::start(bool forceminimize)
 {
@@ -149,22 +127,22 @@ void AutorestartClass::start(bool forceminimize)
 	char answer;
 	std::cin >> answer;
 
-	system("cls");
+	wait();
 
 	std::ifstream infile;
 	infile.open("cookies.txt");
 
-	//parse each line into a string vector
+	// parse each line into a string vector
 	std::vector<std::string> cookies;
 	std::string line;
 	while (std::getline(infile, line))
 	{
 		cookies.push_back(line);
 	}
-	
+
 	while (true)
 	{
-		//for loop to iterate through each cookie
+		// for loop to iterate through each cookie
 		for (int i = 0; i < cookies.size(); i++)
 		{
 			unlockRoblox();
@@ -175,16 +153,15 @@ void AutorestartClass::start(bool forceminimize)
 			if (answer == 'y')
 			{
 
-				//check if the current directory is called workspace
+				// check if the current directory is called workspace
 				std::string current_path = std::filesystem::current_path().string();
-				
+
 				if (current_path.find("workspace") == std::string::npos)
 				{
 					//-- read the first line of config.ini
 					std::ifstream config("config.ini");
 					std::string line;
 					std::getline(config, line);
-
 
 					//-- extract the parent folder of line by removing \workspace
 					std::string parent = line.substr(0, line.find_last_of("\\"));
@@ -206,25 +183,25 @@ void AutorestartClass::start(bool forceminimize)
 				else
 				{
 					//-- get absolute path of current directory
-				path = std::filesystem::current_path().string();
-				path.erase(path.find("workspace"), 9);
+					path = std::filesystem::current_path().string();
+					path.erase(path.find("workspace"), 9);
 
-				path += "bin";
+					path += "bin";
 
-				//-- index every exe file in the bin folder and store them in a vector
-				std::vector<std::string> files;
-				for (const auto& entry : std::filesystem::directory_iterator(path))
-				{
-					if (entry.path().extension() == ".exe")
+					//-- index every exe file in the bin folder and store them in a vector
+					std::vector<std::string> files;
+					for (const auto &entry : std::filesystem::directory_iterator(path))
 					{
-						files.push_back(entry.path().string());
+						if (entry.path().extension() == ".exe")
+						{
+							files.push_back(entry.path().string());
+						}
 					}
 				}
-				}
-				
+
 				//-- index every exe file in the bin folder and store them in a vector
 				std::vector<std::string> files;
-				for (const auto& entry : std::filesystem::directory_iterator(path))
+				for (const auto &entry : std::filesystem::directory_iterator(path))
 				{
 					if (entry.path().extension() == ".exe")
 					{
@@ -234,7 +211,7 @@ void AutorestartClass::start(bool forceminimize)
 
 				//-- hash every exe file in the bin folder and store them in a vector
 				std::vector<std::string> hashes;
-				for (const auto& file : files)
+				for (const auto &file : files)
 				{
 					hashes.push_back(SHA256(file.c_str()));
 				}
@@ -255,14 +232,14 @@ void AutorestartClass::start(bool forceminimize)
 			{
 				//-- get a vector of all folders present in C:\\Users
 				std::vector<std::string> folders;
-				for (auto& p : std::filesystem::directory_iterator("C:\\Users"))
+				for (auto &p : std::filesystem::directory_iterator("C:\\Users"))
 				{
 					folders.push_back(p.path().string());
 				}
 
 				//-- check which folders contains \AppData\Local\Roblox\, add its fuill path to a string
 				std::string pathf;
-				for (auto& p : folders)
+				for (auto &p : folders)
 				{
 					if (std::filesystem::exists(p + "\\AppData\\Local\\Roblox\\"))
 					{
@@ -272,30 +249,35 @@ void AutorestartClass::start(bool forceminimize)
 
 				//-- get all folders present in the path + \Versions except .exe files
 				std::vector<std::string> Versions;
-				for (auto& p : std::filesystem::directory_iterator(pathf + "\\Versions"))
+				for (auto &p : std::filesystem::directory_iterator(pathf + "Versions"))
 				{
 					if (p.path().extension() != ".exe")
 					{
 						Versions.push_back(p.path().string());
 					}
 				}
-				path = '"' + Versions.back() + "\\RobloxPlayerLauncher.exe" + '"';
+				path = Versions.back() + "\\RobloxPlayerLauncher.exe";
 			}
 
-			srand((unsigned int) time(NULL));
+			srand((unsigned int)time(NULL));
 
 			std::string randomnumber = std::to_string(rand() % 100000 + 100000);
 			std::string randomnumber2 = std::to_string(rand() % 100000 + 100000);
 			std::string unixtime = std::to_string(std::time(nullptr));
 			std::string browserTrackerID = randomnumber + randomnumber2;
 
-			std::string command = '"' + path + '"' + " " + "roblox-player:1+launchmode:play+gameinfo:" + authticket + "+launchtime" + ':' + unixtime + "+placelauncherurl:" + "https%3A%2F%2Fassetgame.roblox.com%2Fgame%2FPlaceLauncher.ashx%3Frequest%3DRequestGame%26browserTrackerId%3D" + browserTrackerID + "%26placeId%3D" + "2809202155" + "%26isPlayTogetherGame%3Dfalse+" + "browsertrackerid:" + browserTrackerID + "+robloxLocale:en_us+gameLocale:en_us+channel:";
+			std::string cmd = '"' + path + "\" " + "roblox-player:1+launchmode:play+gameinfo:" + authticket + "+launchtime" + ':' + unixtime + "+placelauncherurl:" + "https%3A%2F%2Fassetgame.roblox.com%2Fgame%2FPlaceLauncher.ashx%3Frequest%3DRequestGame%26browserTrackerId%3D" + browserTrackerID + "%26placeId%3D" + "2809202155" + "%26isPlayTogetherGame%3Dfalse+" + "browsertrackerid:" + browserTrackerID + "+robloxLocale:en_us+gameLocale:en_us+channel:";
 
-			//print command to console
-			//std::cout << command << std::endl;
-			//system("pause");
-
-			system(command.c_str());
+			STARTUPINFOA si = {};
+			si.cb = sizeof(si);
+			PROCESS_INFORMATION pi = {};
+			if (!CreateProcess(&path[0], &cmd[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+			{
+				printf("CreateProcess() failed: %d.\n", GetLastError());
+			}
+			WaitForSingleObject(pi.hProcess, INFINITE);
+			this->robloxProcess = pi;
+			clear();
 		}
 
 		auto start = std::chrono::steady_clock::now();
@@ -304,7 +286,7 @@ void AutorestartClass::start(bool forceminimize)
 		{
 			if (forceminimize && FindWindow(NULL, "Roblox"))
 			{
-				for (int i = 0; i < cookies.size(); i++) 
+				for (int i = 0; i < cookies.size(); i++)
 				{
 					ShowWindow(FindWindow(NULL, "Roblox"), SW_FORCEMINIMIZE);
 				}
@@ -313,7 +295,7 @@ void AutorestartClass::start(bool forceminimize)
 			std::string msg = "(" + std::to_string(RestartTime - std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - start).count() + 1) + " minutes)";
 
 			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-			COORD coord = { 0, 0 };
+			COORD coord = {0, 0};
 			SetConsoleCursorPosition(hConsole, coord);
 
 			Log(msg, false);
