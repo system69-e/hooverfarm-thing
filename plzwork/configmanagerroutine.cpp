@@ -78,7 +78,12 @@ const std::string items[] {
     "Pure Rokakaka",
     "Lucky Arrow",
     "Gold Coin",
-    "Rokakaka",
+    "Diamond",
+    "DEO's Diary",
+    "Stone Mask",
+    "Quinton's Glove",
+    "Ancient Scroll"
+    "Steel Balls",
 };
 
 #define option(name) "getgenv()[\"" << #name << "\"] = " << config.name << std::endl; 
