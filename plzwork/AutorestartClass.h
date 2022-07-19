@@ -4,7 +4,7 @@
 class AutorestartClass
 {
 public:
-	void start();
+	void start(bool);
 	void unlockRoblox();
 	bool findRoblox();
 	void killRoblox();
@@ -12,4 +12,5 @@ public:
 	std::string SHA256(const char* str);
 
 	void _usleep(int microseconds);
+	void _sleep(int miliseconds);
 };

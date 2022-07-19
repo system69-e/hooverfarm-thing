@@ -31,7 +31,25 @@ struct Config
 };
 
 const std::string configFile = "hooverYBA.lua";
-const std::string autoExecPath = "../autoexec/" + configFile;
+std::string autoExecPath = "../autoexec/" + configFile;
+
+
+//read config.ini
+void readcfg()
+{
+    std::ifstream configFileStream("config.ini");
+    if (!configFileStream.is_open())
+    {
+        std::cout << "Could not open config file" << std::endl;
+        return;
+    }
+    std::string line;
+    std::getline(configFileStream, line);
+
+    //get the parent folder of line
+	std::string parentFolder = line.substr(0, line.find_last_of("\\"));
+    autoExecPath = parentFolder + "\\autoexec";
+}
 
 Config configurations[]
 {
@@ -202,12 +220,8 @@ read_items:
     file << "--[[YOU NEED TO BE ATLEAST LEVEL 3 FOR SHINY FARM (LEVEL 6 For RibFarm)]]--" << std::endl;
     file << "--[[NO THE SCRIPT DOES NOT SKIP ASSETS.]]--" << std::endl;
 
-    file << "if game.PlaceId == 2809202155 then" << std::endl;
-    file << "repeat wait() until game:IsLoaded()" << std::endl;
+
     file << "loadstring(game:HttpGet(" << '"' << link << '"' << ',' << " true))():Activate()" << std::endl;
-    file << "else" << std::endl;
-    file << "warn" << '(' << '"' << "Incorrect Game" << '"' << ')' << std::endl;
-    file << "end" << std::endl;
 
     file.close();
 	
@@ -226,6 +240,7 @@ void ConfigmanagerClass::createConfig(int input, const std::string& link)
         std::cout << "Config creation failed" << std::endl;
     }
 
+	
     //-- move the file to autoexec
     fs::rename(configFile, autoExecPath + "/" +  configFile);
     clear();
@@ -250,6 +265,13 @@ bool ConfigmanagerClass::checkConfig()
 
 void ConfigmanagerClass::configManager(const std::string link)
 {
+	//check if current directory is workspace using filesystem class
+    std::string path = std::filesystem::current_path().string();
+	if (path.find("workspace") == std::string::npos)
+	{
+        readcfg();
+	}
+
     size_t configSize = sizeof(configNames) / sizeof(configNames[0]);
     for (int i = 0; i < configSize; i++)
     {

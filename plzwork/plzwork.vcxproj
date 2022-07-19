@@ -144,12 +144,14 @@
     <ClCompile Include="plzwork.cpp" />
     <ClCompile Include="request.cpp" />
     <ClCompile Include="roblox.cpp" />
+    <ClCompile Include="folder_search.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutorestartClass.h" />
     <ClInclude Include="configmanagerroutine.h" />
     <ClInclude Include="request.h" />
     <ClInclude Include="roblox.h" />
+    <ClInclude Include="folder_search.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
