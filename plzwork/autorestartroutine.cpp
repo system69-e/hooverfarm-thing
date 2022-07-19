@@ -282,13 +282,11 @@ void AutorestartClass::start()
 				path = '"' + Versions.back() + "\\RobloxPlayerLauncher.exe" + '"';
 			}
 
-
 			srand(time(NULL));
 
 			std::string randomnumber = std::to_string(rand() % 100000 + 100000);
 			std::string randomnumber2 = std::to_string(rand() % 100000 + 100000);
 			std::string unixtime = std::to_string(std::time(nullptr));
-
 			std::string browserTrackerID = randomnumber + randomnumber2;
 
 			std::string command = '"' + path + '"' + " " + "roblox-player:1+launchmode:play+gameinfo:" + authticket + "+launchtime" + ':' + unixtime + "+placelauncherurl:" + "https%3A%2F%2Fassetgame.roblox.com%2Fgame%2FPlaceLauncher.ashx%3Frequest%3DRequestGame%26browserTrackerId%3D" + browserTrackerID + "%26placeId%3D" + "2809202155" + "%26isPlayTogetherGame%3Dfalse+" + "browsertrackerid:" + browserTrackerID + "+robloxLocale:en_us+gameLocale:en_us+channel:";
@@ -298,14 +296,12 @@ void AutorestartClass::start()
 			//system("pause");
 
 			system(command.c_str());
-
 		}
 
 		auto start = std::chrono::steady_clock::now();
 
 		while (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - start).count() <= RestartTime)
 		{
-
 			std::string msg = "(" + std::to_string(RestartTime - std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - start).count() + 1) + " minutes)";
 
 			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -315,7 +311,6 @@ void AutorestartClass::start()
 			Log(msg, false);
 
 			_usleep(10000);
-
 		}
 
 		killRoblox();

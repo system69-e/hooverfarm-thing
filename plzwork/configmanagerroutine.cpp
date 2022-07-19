@@ -137,7 +137,12 @@ normal:
     std::cout << "3.Pure Rokakaka" << std::endl;
     std::cout << "4 Lucky Arrow" << std::endl;
     std::cout << "5.Gold Coin" << std::endl;
-    std::cout << "6.Rokakaka" << std::endl;
+    std::cout << "7.Diamond" << std::endl;
+    std::cout << "8.DEO's Diary" << std::endl;
+    std::cout << "9.Stone Mask" << std::endl;
+    std::cout << "10.Quinton's Glove" << std::endl;
+    std::cout << "11.Ancient Scroll" << std::endl;
+    std::cout << "12.Steel Balls" << std::endl;
     std::cout << "Enter the items you want to farm (example: 1,3,6): ";
 	
     std::string user_input;
@@ -202,6 +207,30 @@ normal:
 			if (i == user_choice.size() - 1) file << "\"Rokakaka\"" << std::endl;
 			else file << "\"Rokakaka\"," << std::endl;
             break;
+        case 7:
+            if (i == user_choice.size() - 1) file << "\"Diamond\"" << std::endl;
+            else file << "\"Diamond\"," << std::endl;
+            break;
+        case 8:
+			if (i == user_choice.size() - 1) file << "\"DEO's Diary\"" << std::endl;
+			else file << "\"DEO's Diary\"," << std::endl;
+			break;
+        case 9:
+            if (i == user_choice.size() - 1) file << "\"Stone Mask\"" << std::endl;
+            else file << "\"Stone Mask\"," << std::endl;
+            break;
+        case 10:
+			if (i == user_choice.size() - 1) file << "\"Quinton's Glove\"" << std::endl;
+			else file << "\"Quinton's Glove\"," << std::endl;
+			break;
+        case 11:
+			if (i == user_choice.size() - 1) file << "\"Ancient Scroll\"" << std::endl;
+			else file << "\"Ancient Scroll\"," << std::endl;
+			break;
+        case 12:
+			if (i == user_choice.size() - 1) file << "\"Steel Ball\"" << std::endl;
+			else file << "\"Steel Ball\"," << std::endl;
+			break;
         default:
             std::cout << "Invalid input\n";
             system("pause");
@@ -214,12 +243,8 @@ normal:
     file << "--[[YOU NEED TO BE ATLEAST LEVEL 3 FOR SHINY FARM (LEVEL 6 For RibFarm)]]--" << std::endl;
     file << "--[[NO THE SCRIPT DOES NOT SKIP ASSETS.]]--" << std::endl;
 
-    file << "if game.PlaceId == 2809202155 then" << std::endl;
-    file << "repeat wait() until game:IsLoaded()" << std::endl;
+
     file << "loadstring(game:HttpGet(" << '"' << link << '"' << ',' << " true))():Activate()" << std::endl;
-    file << "else" << std::endl;
-    file << "warn" << '(' << '"' << "Incorrect Game" << '"' << ')' << std::endl;
-    file << "end" << std::endl;
 
     file.close();
 	
