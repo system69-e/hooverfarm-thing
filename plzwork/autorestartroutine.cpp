@@ -248,14 +248,6 @@ void AutorestartClass::start()
 					{
 						rightpath = files[i];
 					}
-					/*
-					else
-					{
-						Log("You probably have not enabled Autolaunch on synapse.", 1);
-						system("pause");
-						exit(0);
-					}
-					*/
 				}
 				path = rightpath;
 			}
@@ -287,12 +279,7 @@ void AutorestartClass::start()
 						Versions.push_back(p.path().string());
 					}
 				}
-
-				std::string path2 = Versions.back();
-
-				std::string robloxplayerlauncher = '"' + path2 + "\\RobloxPlayerLauncher.exe" + '"';
-
-				path = robloxplayerlauncher;
+				path = '"' + Versions.back() + "\\RobloxPlayerLauncher.exe" + '"';
 			}
 
 
