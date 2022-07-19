@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include <Windows.h>
 
 class AutorestartClass
@@ -16,5 +17,5 @@ public:
 	void _sleep(int miliseconds);
 
 private:
-	PROCESS_INFORMATION robloxProcess{};
+	std::vector<PROCESS_INFORMATION> robloxProcesses;
 };
