@@ -31,7 +31,6 @@ bool val_func(const fs::directory_entry& entry);
 void createcfg();
 std::vector<std::string> get_drives();
 
-
 int main(int argc, char* argv[])
 {
 	SetConsoleTitle("Floppafarm AIO tool Version 1.0 - by DarkNet#7679 & Sightem#4821 - https://discord.gg/u2vU98KfFS");
@@ -91,7 +90,12 @@ int main(int argc, char* argv[])
 			ctx->search_one = false;
 			ctx->results = std::vector<fs::path>();
 			
-			start_deep_traverse_search("C:\\Users\\" + username_str + "\\Downloads", ctx, 2);
+			try {
+				start_deep_traverse_search(std::filesystem::current_path(), ctx, 2);
+			}
+			catch (const std::exception e) {
+				std::cout << "Fatal file system error occured: " << e.what() << std::endl;
+			}
 			if (ctx->results.size() == 0)
 			{
 				//-- get a list of all drives
