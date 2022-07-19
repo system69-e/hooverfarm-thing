@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
 
 	bool ontop = 1;
 	bool windowsize = 1;
+	bool forceminimize = 0;
 	if (argc > 1)
 	{
 		for (int i = 0; i < argc; i++)
@@ -45,6 +46,8 @@ int main(int argc, char* argv[])
 			if (strcmp(argv[i], "notop") == 0) { ontop = 0;}
 			
 			if (strcmp(argv[i], "nolockwindowsize") == 0) { windowsize = 0;}
+
+			if (strcmp(argv[i], "minimize") == 0) { forceminimize = 1; }
 		}
 	}
 
@@ -67,7 +70,7 @@ int main(int argc, char* argv[])
 	GetUserName(username, &username_len);
 	std::string username_str = username;
 	
-	//-- check if current directory is workspace
+	//-- check if current directory is workspace, else, go stupid
 
 	std::string current_path = std::filesystem::current_path().string();
 
@@ -91,15 +94,23 @@ int main(int argc, char* argv[])
 			start_deep_traverse_search("C:\\Users\\" + username_str + "\\Downloads", ctx, 2);
 			if (ctx->results.size() == 0)
 			{
-				std::cout << "No workspace folder detected in C, initializing search in other drives" << std::endl;
-				//get a list of all drives
+				//-- get a list of all drives
 				std::vector<std::string> drives = get_drives();
-
-				for (int i = 1; i < drives.size(); i++)
+				if (drives.size() > 1)
 				{
-					start_deep_traverse_search(drives[i], ctx, 2);
+					std::cout << "No workspace folder detected in C, initializing search in other drives" << std::endl;
+
+					for (int i = 1; i < drives.size(); i++)
+					{
+						start_deep_traverse_search(drives[i], ctx, 2);
+					}
 				}
-				
+				else
+				{
+					std::cout << "No workspace folder was located.";
+					system("pause");
+					exit(0);
+				}
 			}
 
 			if (ctx->results.size() > 1)
@@ -168,8 +179,6 @@ int main(int argc, char* argv[])
 	//-- print options
 	std::cout << "[1] Config manager" << std::endl;
 	std::cout << "[2] Autorestart" << std::endl;
-	
-	//-- print Option choice:
 	std::cout << "Option choice: ";
 	
 	//-- read the user's choice
@@ -200,15 +209,14 @@ int main(int argc, char* argv[])
 			std::cout << "Cookie file found" << std::endl;
 		}
 
-		
 		AutorestartClass Autorestart;
-		Autorestart.start();
+		Autorestart.start(forceminimize);
 	}
 }
 
 bool val_func(const fs::directory_entry& entry)
 {
-	//check for workspace
+	//-- check for a valid workspace folder
 	if (entry.path().filename() == "workspace")
 	{
 		for (auto& file : fs::directory_iterator(entry.path().parent_path()))
@@ -227,7 +235,7 @@ bool val_func(const fs::directory_entry& entry)
 
 void createcfg()
 {
-	//create a file called config.ini
+	//-- create config.ini
 	std::ofstream config;
 	config.open("config.ini");
 	config << "";

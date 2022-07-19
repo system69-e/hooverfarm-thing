@@ -4,7 +4,7 @@
 class AutorestartClass
 {
 public:
-	void start();
+	void start(bool);
 	void unlockRoblox();
 	bool findRoblox();
 	void killRoblox();

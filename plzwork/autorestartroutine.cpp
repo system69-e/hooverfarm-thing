@@ -140,7 +140,7 @@ std::string AutorestartClass::SHA256(const char* path)
 }
 
 
-void AutorestartClass::start()
+void AutorestartClass::start(bool forceminimize)
 {
 	std::cout << "How many minutes before restarting? (default is 20): ";
 	std::cin >> RestartTime;
@@ -302,6 +302,14 @@ void AutorestartClass::start()
 
 		while (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - start).count() <= RestartTime)
 		{
+			if (forceminimize && FindWindow(NULL, "Roblox"))
+			{
+				for (int i = 0; i < cookies.size(); i++) 
+				{
+					ShowWindow(FindWindow(NULL, "Roblox"), SW_FORCEMINIMIZE);
+				}
+			}
+
 			std::string msg = "(" + std::to_string(RestartTime - std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - start).count() + 1) + " minutes)";
 
 			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
