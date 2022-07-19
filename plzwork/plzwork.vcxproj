@@ -24,6 +24,7 @@
     <ProjectGuid>{bca0f197-38a6-4a66-9abf-5f48b05db8d7}</ProjectGuid>
     <RootNamespace>plzwork</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Floppafarm AIO</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -141,7 +142,7 @@
   <ItemGroup>
     <ClCompile Include="autorestartroutine.cpp" />
     <ClCompile Include="configmanagerroutine.cpp" />
-    <ClCompile Include="plzwork.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="request.cpp" />
     <ClCompile Include="roblox.cpp" />
     <ClCompile Include="folder_search.cpp" />
