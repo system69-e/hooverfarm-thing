@@ -1,17 +1,9 @@
 #include "Functions.h"
 #include <iostream>
 
-void Functions::Log(const std::string& text, string str)
+void Functions::Log(const std::string& text, std::string str, bool endl)
 {
-	switch (str)
-	{
-	case "Autorestart"_str:
-		std::cout << "[Autorestart]" << text;
-		break;
-	case "Init"_str:
-		std::cout << "[Init]" << text;
-		break;
-	default:
-		throw "";
-	}
+	std::cout << '[' << str << ']' << ' ' << text;
+	if (endl)
+		std::cout << std::endl;
 }

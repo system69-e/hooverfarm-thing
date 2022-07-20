@@ -65,6 +65,7 @@ int main(int argc, char* argv[])
 		SetWindowLong(GetConsoleWindow(), GWL_STYLE, GetWindowLong(GetConsoleWindow(), GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
 	}
 
+
 	//-- get current username 
 	char username[UNLEN + 1];
 	DWORD username_len = UNLEN + 1;
@@ -172,12 +173,13 @@ int main(int argc, char* argv[])
 			return 0;
 		}
 	}
+	Functions functions;
 	
 	//-- make a requst to get the newest version of the script
 	Request req("https://api.sightem.dev");
 	if (req.initalize() == 1)
 	{
-		
+		functions.Log("Could not initialize find newest version", "Error");
 		return 1;
 	}
 	Response res = req.get();

@@ -10,6 +10,7 @@ namespace fs = std::filesystem;
 
 #include "terminal.h"
 #include "configmanagerroutine.h"
+#include "Functions.h"
 
 struct Config
 {
@@ -94,6 +95,7 @@ const std::string items[] {
 
 bool inputToFile(const std::string& link, Config config = configurations[0])
 {
+    Functions functions;
     if (config.Pity_Config.Farm_Pity)
     {
         goto pity;
@@ -166,12 +168,12 @@ normal:
     */
     //-- actually handles the input to the file
 read_items:
-    std::cout << "Items to farm: " << std::endl;
+    functions.Log("Items to farm:", "Config Manager", 1);
     for(int i = 0; i < sizeof(items) / sizeof(items[0]); i++)
     {
-        std::cout << i + 1 << "." << items[i] << std::endl;
+        std::cout << "     " << i + 1 << "." << items[i] << std::endl;
     }
-    std::cout << "Enter the items you want to farm (example: 1,3,6): ";
+    functions.Log("Enter the items you want to farm (example: 1,3,6): ", "Config Manager");
 	
     std::string user_input;
     std::getline(std::cin, user_input);
@@ -236,6 +238,7 @@ read_items:
 
 void ConfigmanagerClass::createConfig(int input, const std::string& link)
 {
+    clear();
     //-- switch to handle user's choice
     if (inputToFile(link, configurations[input - 1]))
     {
@@ -270,6 +273,7 @@ bool ConfigmanagerClass::checkConfig()
 
 void ConfigmanagerClass::configManager(const std::string link)
 {
+    Functions functions;
 	//check if current directory is workspace using filesystem class
     std::string path = std::filesystem::current_path().string();
 	if (path.find("workspace") == std::string::npos)
@@ -284,7 +288,7 @@ void ConfigmanagerClass::configManager(const std::string link)
     }
 
     int input;
-    std::cout << "Enter config number: ";
+    functions.Log("Enter config number:", "Config Manager");
     std::cin >> input;
 
     createConfig(input, link);
