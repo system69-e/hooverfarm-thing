@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="autorestartroutine.cpp" />
     <ClCompile Include="configmanagerroutine.cpp" />
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="request.cpp" />
     <ClCompile Include="roblox.cpp" />
@@ -151,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="AutorestartClass.h" />
     <ClInclude Include="configmanagerroutine.h" />
+    <ClInclude Include="Functions.h" />
     <ClInclude Include="request.h" />
     <ClInclude Include="roblox.h" />
     <ClInclude Include="folder_search.h" />

@@ -12,6 +12,7 @@
 #include "roblox.h"
 #include "terminal.h"
 #include "folder_search.h"
+#include "Functions.h"
 
 // link libraries
 #ifdef _DEBUG
@@ -174,8 +175,9 @@ int main(int argc, char* argv[])
 	
 	//-- make a requst to get the newest version of the script
 	Request req("https://api.sightem.dev");
-	if (req.initalize() == 1) {
-		std::cout << "Error: Could not initialize find newest version" << std::endl;
+	if (req.initalize() == 1)
+	{
+		
 		return 1;
 	}
 	Response res = req.get();

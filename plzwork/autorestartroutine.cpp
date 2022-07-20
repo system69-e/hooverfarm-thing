@@ -1,6 +1,7 @@
 #include "AutorestartClass.h"
 #include "roblox.h"
 #include "terminal.h"
+#include "Functions.h"
 #include <iostream>
 #include <windows.h>
 #include <Tlhelp32.h>
@@ -34,7 +35,8 @@ void AutorestartClass::killRoblox()
 {
 	clear();
 	AutorestartClass Autorestart;
-	Autorestart.Log("Killing Roblox", false);
+	Functions functions;
+	functions.Log("Killing Roblox", "Autorestart");
 	// now get all the child processes of the main process
 	HANDLE hProcessSnap;
 	PROCESSENTRY32 pe32;
@@ -62,15 +64,10 @@ void AutorestartClass::killRoblox()
 		}
 	} while (Process32Next(hProcessSnap, &pe32));
 	this->robloxProcesses.clear();
-	Autorestart.Log("Killed Roblox", false);
+	functions.Log("Killed Roblox", "Autorestart");
 	CloseHandle(hProcessSnap);
 
 	return;
-}
-
-void AutorestartClass::Log(const std::string &text, bool error)
-{
-	std::cout << (error ? " [ error ] " + text : " [ Autorestart ] " + text + "                                       ") << std::endl;
 }
 
 void AutorestartClass::_usleep(int microseconds)
@@ -123,6 +120,7 @@ std::string AutorestartClass::SHA256(const char *path)
 
 void AutorestartClass::start(bool forceminimize)
 {
+	Functions functions;
 	std::cout << "How many minutes before restarting? (default is 20): ";
 	std::cin >> RestartTime;
 
@@ -300,7 +298,7 @@ void AutorestartClass::start(bool forceminimize)
 			COORD coord = {0, 0};
 			SetConsoleCursorPosition(hConsole, coord);
 
-			Log(msg, false);
+			functions.Log(msg, "Autorestart");
 
 			_usleep(10000);
 		}
