@@ -143,6 +143,14 @@ void AutorestartClass::start(bool forceminimize)
 
 	while (true)
 	{
+		//-- read the first line of config.ini, store into a string called line, stoer the second line into placeid
+		std::ifstream config("config.ini");
+		std::string line;
+		std::string placeid = "2809202155";
+		std::getline(config, line);
+		std::getline(config, placeid);
+		
+		
 		// for loop to iterate through each cookie
 		for (int i = 0; i < cookies.size(); i++)
 		{
@@ -157,13 +165,10 @@ void AutorestartClass::start(bool forceminimize)
 				// check if the current directory is called workspace
 				std::string current_path = std::filesystem::current_path().string();
 
+
 				if (current_path.find("workspace") == std::string::npos)
 				{
-					//-- read the first line of config.ini
-					std::ifstream config("config.ini");
-					std::string line;
-					std::getline(config, line);
-
+					
 					//-- extract the parent folder of line by removing \workspace
 					std::string parent = line.substr(0, line.find_last_of("\\"));
 
@@ -267,7 +272,7 @@ void AutorestartClass::start(bool forceminimize)
 			std::string unixtime = std::to_string(std::time(nullptr));
 			std::string browserTrackerID = randomnumber + randomnumber2;
 
-			std::string cmd = '"' + path + "\" " + "roblox-player:1+launchmode:play+gameinfo:" + authticket + "+launchtime" + ':' + unixtime + "+placelauncherurl:" + "https%3A%2F%2Fassetgame.roblox.com%2Fgame%2FPlaceLauncher.ashx%3Frequest%3DRequestGame%26browserTrackerId%3D" + browserTrackerID + "%26placeId%3D" + "2809202155" + "%26isPlayTogetherGame%3Dfalse+" + "browsertrackerid:" + browserTrackerID + "+robloxLocale:en_us+gameLocale:en_us+channel:";
+			std::string cmd = '"' + path + "\" " + "roblox-player:1+launchmode:play+gameinfo:" + authticket + "+launchtime" + ':' + unixtime + "+placelauncherurl:" + "https%3A%2F%2Fassetgame.roblox.com%2Fgame%2FPlaceLauncher.ashx%3Frequest%3DRequestGame%26browserTrackerId%3D" + browserTrackerID + "%26placeId%3D" + placeid + "%26isPlayTogetherGame%3Dfalse+" + "browsertrackerid:" + browserTrackerID + "+robloxLocale:en_us+gameLocale:en_us+channel:";
 
 			STARTUPINFOA si = {};
 			si.cb = sizeof(si);
