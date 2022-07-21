@@ -31,44 +31,64 @@ void AutorestartClass::unlockRoblox()
 	CreateMutex(NULL, TRUE, "ROBLOX_singletonMutex");
 }
 
+bool AutorestartClass::findRoblox()
+{
+	PROCESSENTRY32 entry;
+	entry.dwSize = sizeof(PROCESSENTRY32);
+
+	const auto snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+
+	if (!Process32First(snapshot, &entry))
+	{
+		CloseHandle(snapshot);
+		return false;
+	}
+
+	do 
+	{
+		if (!_tcsicmp(entry.szExeFile, "RobloxPlayerBeta.exe"))
+		{
+			CloseHandle(snapshot);
+			return true;
+		}
+	} while (Process32Next(snapshot, &entry));
+
+	CloseHandle(snapshot);
+	return false;
+}
+
 void AutorestartClass::killRoblox()
 {
-	clear();
-	AutorestartClass Autorestart;
+	system("cls");
 	Functions functions;
 	functions.Log("Killing Roblox", "Autorestart", 1);
-	// now get all the child processes of the main process
-	HANDLE hProcessSnap;
-	PROCESSENTRY32 pe32;
-	hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	if (hProcessSnap == INVALID_HANDLE_VALUE)
+	bool found = AutorestartClass::findRoblox() ? true : false;
+	if (found)
 	{
-		printf("CreateToolhelp32Snapshot() failed: %d.\n", GetLastError());
-	}
-	pe32.dwSize = sizeof(PROCESSENTRY32);
-	if (!Process32First(hProcessSnap, &pe32))
-	{
-		printf("Process32First() failed: %d.\n", GetLastError());
-	}
-	do
-	{	
-		for (const PROCESS_INFORMATION& pi : this->robloxProcesses) {
-			if(pe32.th32ParentProcessID == pi.dwProcessId) {
-				HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pe32.th32ProcessID);
-				if (hProcess)
+		HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+		PROCESSENTRY32 pEntry;
+
+		pEntry.dwSize = sizeof(pEntry);
+		BOOL hRes = Process32First(hSnapShot, &pEntry);
+		while (hRes)
+		{
+			if (strcmp(pEntry.szExeFile, "RobloxPlayerBeta.exe") == 0)
+			{
+				HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD)pEntry.th32ProcessID);
+
+				if (hProcess != NULL)
 				{
-					TerminateProcess(hProcess, 0);
+					TerminateProcess(hProcess, 9);
 					CloseHandle(hProcess);
 				}
-			}
-		}
-	} while (Process32Next(hProcessSnap, &pe32));
-	this->robloxProcesses.clear();
-	functions.Log("Killed Roblox", "Autorestart", 1);
-	CloseHandle(hProcessSnap);
 
-	return;
+			}
+			hRes = Process32Next(hSnapShot, &pEntry);
+		}
+		CloseHandle(hSnapShot);
+	}
 }
+
 
 void AutorestartClass::_usleep(int microseconds)
 {
