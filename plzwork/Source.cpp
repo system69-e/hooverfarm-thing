@@ -5,14 +5,13 @@
 #include <windows.h>
 #include <Lmcons.h>
 
-
 #include "request.h"
 #include "configmanagerroutine.h"
 #include "AutorestartClass.h"
 #include "roblox.h"
 #include "terminal.h"
 #include "folder_search.h"
-#include "Functions.h"
+#include "logger.h"
 
 // link libraries
 #ifdef _DEBUG
@@ -27,7 +26,6 @@
 #pragma comment (lib, "Crypt32.lib")
 #pragma comment (lib, "advapi32.lib")
 #pragma comment (lib, "User32.lib")
-
 
 bool val_func(const fs::directory_entry& entry);
 void createcfg();
@@ -81,7 +79,7 @@ int main(int argc, char* argv[])
 
 		if (current_path.find("workspace") == std::string::npos)
 		{
-			std::cout << "Not in workspace, initializing search for workspace" << std::endl;
+			Log("Not in workspace, initializing search for workspace");
 			
 			if (!std::filesystem::exists("config.ini"))
 			{
@@ -99,7 +97,7 @@ int main(int argc, char* argv[])
 			}
 			catch (const std::exception e) 
 			{
-				std::cout << "Fatal file system error occured: " << e.what() << std::endl;
+				Log("Fatal file system error occured: " + std::string(e.what()), LOG_FATAL);
 			}
 			if (ctx->results.size() == 0)
 			{
@@ -107,7 +105,7 @@ int main(int argc, char* argv[])
 				std::vector<std::string> drives = get_drives();
 				if (drives.size() > 1)
 				{
-					std::cout << "No workspace folder detected in C, initializing search in other drives" << std::endl;
+					Log("No workspace folder detected in C drive, initializing search in other drives");
 
 					for (int i = 1; i < drives.size(); i++)
 					{
@@ -116,7 +114,7 @@ int main(int argc, char* argv[])
 				}
 				else
 				{
-					std::cout << "No workspace folder was located.";
+					Log("No workspace folder was located.", LOG_ERROR);
 					wait();
 					return 0;
 				}
@@ -124,7 +122,7 @@ int main(int argc, char* argv[])
 
 			if (ctx->results.size() > 1)
 			{
-				std::cout << "Multiple results found, please select one: " << std::endl;
+				Log("Multiple results found, please select one: ");
 
 				int outloop = 0;
 				for (int i = 0; i < ctx->results.size(); i++)
@@ -132,15 +130,15 @@ int main(int argc, char* argv[])
 					std::cout << i << ": " << ctx->results[i].string() << std::endl;
 					outloop++;
 				}
-				std::cout << outloop << ": None of these results are correct" << std::endl;
+				Log(outloop + ": None of these results are correct", LOG_ERROR);
 
-				std::cout << "Select a workspace: " << std::endl;
+				Log("Select a workspace: ");
 				int selection = 0;
 				std::cin >> selection;
 
 				if (selection == outloop)
 				{
-					std::cout << "No workspace selected, please manually move the exe to your workspace folder" << std::endl;
+					Log("No workspace selected, please manually move the exe to your workspace folder");
 					wait();
 					return 0;
 				}
@@ -163,7 +161,7 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			std::cout << "No config file found, creating one" << std::endl;
+			Log("No config file found, creating one");
 			std::ofstream config;
 			config.open("config.ini");
 			config << current_path;
@@ -179,23 +177,21 @@ int main(int argc, char* argv[])
 		config.close();
 		if (config_path.empty())
 		{
-			std::cout << "Config file is empty, please manually move the exe to your workspace folder" << std::endl;
+			Log("Config file is empty, please manually move the exe to your workspace folder", LOG_ERROR);
 			wait();
 			return 0;
 		}
 	}
-
-	Functions functions;
 	
 	//-- make a requst to get the newest version of the script
 	Request req("https://api.sightem.dev");
 	if (req.initalize() == 1)
 	{
-		functions.Log("Could not initialize find newest version", "Error");
+		Log("Could not initialize find newest version", LOG_FATAL);
 		return 1;
 	}
 	Response res = req.get();
-	std::cout << "Welcome to Hooverfarm's AIO tool" << std::endl;
+	Log("Welcome to Hooverfarm's AIO tool", "AIO");
 
 	//-- print options
 	std::cout << "[1] Config manager" << std::endl;
@@ -219,7 +215,7 @@ int main(int argc, char* argv[])
 		std::ifstream cookieFile("cookies.txt");
 		if (!cookieFile.good())
 		{
-			std::cout << "Cookie file not found, creating one" << std::endl;
+			Log("Cookie file not found, creating one", "AIO");
 			std::ofstream cookieFile("cookies.txt");
 			cookieFile << "";
 			cookieFile.close();
@@ -227,7 +223,7 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			std::cout << "Cookie file found" << std::endl;
+			Log("Cookie file found", "AIO");
 		}
 
 		AutorestartClass Autorestart;

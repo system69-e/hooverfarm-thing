@@ -1,7 +1,7 @@
 #include "AutorestartClass.h"
 #include "roblox.h"
 #include "terminal.h"
-#include "Functions.h"
+#include "logger.h"
 #include <iostream>
 #include <windows.h>
 #include <Tlhelp32.h>
@@ -16,14 +16,6 @@
 #pragma warning(disable : 4996)
 // OpenSSL Library
 #include <openssl/sha.h>
-
-#ifdef _UNICODE
-typedef wchar_t TCHAR;
-#else
-typedef char TCHAR;
-#endif // _UNICODE
-
-typedef const TCHAR *LPCTSTR;
 
 int RestartTime = 20;
 void AutorestartClass::unlockRoblox()
@@ -60,8 +52,7 @@ bool AutorestartClass::findRoblox()
 void AutorestartClass::killRoblox()
 {
 	system("cls");
-	Functions functions;
-	functions.Log("Killing Roblox", "Autorestart", 1);
+	Log("Killing Roblox", "AutoRestart", true);
 	bool found = AutorestartClass::findRoblox() ? true : false;
 	if (found)
 	{
@@ -140,11 +131,10 @@ std::string AutorestartClass::SHA256(const char *path)
 
 void AutorestartClass::start(bool forceminimize)
 {
-	Functions functions;
-	std::cout << "How many minutes before restarting? (default is 20): ";
+	Log("How many minutes before restarting? (default is 20): ", "AutoRestart");
 	std::cin >> RestartTime;
 
-	std::cout << "Are you using Synapse? (y/n)";
+	Log("Are you using Synapse? (y/n)", "AutoRestart");
 	char answer;
 	std::cin >> answer;
 
@@ -299,7 +289,8 @@ void AutorestartClass::start(bool forceminimize)
 			PROCESS_INFORMATION pi = {};
 			if (!CreateProcess(&path[0], &cmd[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
 			{
-				printf("CreateProcess() failed: %d.\n", GetLastError());
+				Log("CreateProcess() failed: " + GetLastError(), LOG_FATAL);
+				return;
 			}
 			WaitForSingleObject(pi.hProcess, INFINITE);
 			this->robloxProcesses.push_back(pi);
@@ -323,7 +314,7 @@ void AutorestartClass::start(bool forceminimize)
 			COORD coord = {0, 0};
 			SetConsoleCursorPosition(hConsole, coord);
 
-			functions.Log(msg, "Autorestart");
+			Log(msg, "AutoRestart");
 
 			_usleep(10000);
 		}
