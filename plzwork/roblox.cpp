@@ -1,5 +1,5 @@
-#include "roblox.h"
-#include "request.h"
+#include "Roblox.h"
+#include "Request.h"
 
 std::string findHeader(std::string headers, std::string toFind) {
     std::string header = "";
