@@ -93,10 +93,12 @@ int main(int argc, char* argv[])
 			ctx->search_one = false;
 			ctx->results = std::vector<fs::path>();
 			
-			try {
+			try 
+			{
 				start_deep_traverse_search(std::filesystem::current_path(), ctx, 2);
 			}
-			catch (const std::exception e) {
+			catch (const std::exception e) 
+			{
 				std::cout << "Fatal file system error occured: " << e.what() << std::endl;
 			}
 			if (ctx->results.size() == 0)
@@ -156,14 +158,14 @@ int main(int argc, char* argv[])
 				config << ctx->results[0].string();
 				config.close();
 			}
+
+			delete ctx;
 		}
 		else
 		{
 			std::cout << "No config file found, creating one" << std::endl;
 			std::ofstream config;
 			config.open("config.ini");
-			
-			//input current path
 			config << current_path;
 		}
 	}
@@ -182,6 +184,7 @@ int main(int argc, char* argv[])
 			return 0;
 		}
 	}
+
 	Functions functions;
 	
 	//-- make a requst to get the newest version of the script
