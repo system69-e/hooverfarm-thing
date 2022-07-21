@@ -148,6 +148,7 @@
     <ClCompile Include="roblox.cpp" />
     <ClCompile Include="folder_search.cpp" />
     <ClCompile Include="terminal.cpp" />
+    <ClCompile Include="logger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutorestartClass.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="roblox.h" />
     <ClInclude Include="folder_search.h" />
     <ClInclude Include="terminal.h" />
+    <ClInclude Include="logger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
