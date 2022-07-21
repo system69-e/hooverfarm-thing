@@ -5,13 +5,13 @@
 #include <windows.h>
 #include <Lmcons.h>
 
-#include "request.h"
+#include "Request.h"
 #include "ConfigManager.h"
 #include "Autorestart.h"
-#include "roblox.h"
-#include "terminal.h"
-#include "folder_search.h"
-#include "logger.h"
+#include "Roblox.h"
+#include "Terminal.h"
+#include "FolderSearch.h"
+#include "Logger.h"
 
 // link libraries
 #ifdef _DEBUG

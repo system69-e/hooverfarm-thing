@@ -1,7 +1,7 @@
 #include "Autorestart.h"
-#include "roblox.h"
-#include "terminal.h"
-#include "logger.h"
+#include "Roblox.h"
+#include "Terminal.h"
+#include "Logger.h"
 #include <iostream>
 #include <windows.h>
 #include <Tlhelp32.h>

@@ -18,25 +18,25 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="configmanagerroutine.cpp">
+    <ClCompile Include="ConfigManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="autorestartroutine.cpp">
+    <ClCompile Include="Autorestart.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="request.cpp">
+    <ClCompile Include="Request.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="roblox.cpp">
+    <ClCompile Include="Roblox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="folder_search.cpp">
+    <ClCompile Include="FolderSearch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="terminal.cpp">
+    <ClCompile Include="Terminal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="logger.cpp">
+    <ClCompile Include="Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,19 +44,19 @@
     <ClInclude Include="ConfigManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="request.h">
+    <ClInclude Include="Request.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="roblox.h">
+    <ClInclude Include="Roblox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="folder_search.h">
+    <ClInclude Include="FolderSearch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="terminal.h">
+    <ClInclude Include="Terminal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="logger.h">
+    <ClInclude Include="Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Autorestart.h">
