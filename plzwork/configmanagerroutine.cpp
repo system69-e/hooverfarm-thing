@@ -49,7 +49,7 @@ void readcfg()
 
     //get the parent folder of line
 	std::string parentFolder = line.substr(0, line.find_last_of("\\"));
-    autoExecPath = parentFolder + "\\autoexec" + configFile;
+    autoExecPath = parentFolder + "/autoexec/" + configFile;
 }
 
 Config configurations[]
