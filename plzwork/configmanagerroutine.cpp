@@ -85,6 +85,7 @@ const std::string items[] {
     "Quinton's Glove",
     "Ancient Scroll",
     "Steel Balls",
+	"Rokakaka",
 };
 
 #define option(name) "getgenv()[\"" << #name << "\"] = " << config.name << std::endl; 
