@@ -10,7 +10,7 @@ namespace fs = std::filesystem;
 
 #include "terminal.h"
 #include "configmanagerroutine.h"
-#include "Functions.h"
+#include "logger.h"
 
 struct Config
 {
@@ -41,7 +41,7 @@ void readcfg()
     std::ifstream configFileStream("config.ini");
     if (!configFileStream.is_open())
     {
-        std::cout << "Could not open config file" << std::endl;
+        Log("Could not open config file", LOG_ERROR);
         return;
     }
     std::string line;
@@ -96,7 +96,6 @@ const std::string items[] {
 
 bool inputToFile(const std::string& link, Config config = configurations[0])
 {
-    Functions functions;
     if (config.Pity_Config.Farm_Pity)
     {
         goto pity;
@@ -109,7 +108,7 @@ bool inputToFile(const std::string& link, Config config = configurations[0])
 pity:
     getc(stdin); //-- skip remainin chars
 read:
-    std::cout << "Enter pity goal: ";
+    Log("Enter pity goal: ", "ConfigManager");
 
     float f;
     try
@@ -122,7 +121,7 @@ read:
 
 		if (std::stof(buffer) < 1.5f || std::stof(buffer) > 5.0f)
 		{
-			std::cout << "Invalid input" << std::endl;
+            Log("Invalid input, please try again!", LOG_ERROR);
 			goto read;
 		}
 
@@ -132,7 +131,7 @@ read:
     }
     catch (...)
     {
-        std::cout << "Invalid input, try again." << std::endl;
+        Log("Invalid input, please try again!", LOG_ERROR);
         goto read;
     }
 
@@ -169,12 +168,12 @@ normal:
     */
     //-- actually handles the input to the file
 read_items:
-    functions.Log("Items to farm:", "Config Manager", 1);
+    Log("Items to farm:", "ConfigManager");
     for(int i = 0; i < sizeof(items) / sizeof(items[0]); i++)
     {
         std::cout << "     " << i + 1 << "." << items[i] << std::endl;
     }
-    functions.Log("Enter the items you want to farm (example: 1,3,6): ", "Config Manager");
+    Log("Enter the items you want to farm (example: 1,3,6): ", "ConfigManager", false);
 	
     std::string user_input;
     std::getline(std::cin, user_input);
@@ -218,7 +217,7 @@ read_items:
         }
         else 
         {
-            std::cout << "Invalid input, try again." << std::endl;
+            Log("Invalid input, try again.", LOG_ERROR);
             goto read_items;
         }
     }
@@ -243,11 +242,11 @@ void ConfigmanagerClass::createConfig(int input, const std::string& link)
     //-- switch to handle user's choice
     if (inputToFile(link, configurations[input - 1]))
     {
-        std::cout << "Config created successfully" << std::endl;
+        Log("Config created successfully", "ConfigManager");
     }
     else
     {
-        std::cout << "Config creation failed" << std::endl;
+        Log("Config creation failed", LOG_ERROR);
     }
     //-- move the file to the autoexec folder
     fs::rename(configFile, autoExecPath);
@@ -273,7 +272,6 @@ bool ConfigmanagerClass::checkConfig()
 
 void ConfigmanagerClass::configManager(const std::string link)
 {
-    Functions functions;
 	//check if current directory is workspace using filesystem class
     std::string path = std::filesystem::current_path().string();
 	if (path.find("workspace") == std::string::npos)
@@ -288,7 +286,7 @@ void ConfigmanagerClass::configManager(const std::string link)
     }
 
     int input;
-    functions.Log("Enter config number:", "Config Manager");
+    Log("Enter config number:", "ConfigManager");
     std::cin >> input;
 
     createConfig(input, link);
