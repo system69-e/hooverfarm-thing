@@ -1,4 +1,4 @@
-#include "AutorestartClass.h"
+#include "autorestartroutine.h"
 #include "roblox.h"
 #include "terminal.h"
 #include "logger.h"
@@ -18,12 +18,12 @@
 #include <openssl/sha.h>
 
 int RestartTime = 20;
-void AutorestartClass::unlockRoblox()
+void Autorestart::unlockRoblox()
 {
 	CreateMutex(NULL, TRUE, "ROBLOX_singletonMutex");
 }
 
-bool AutorestartClass::findRoblox()
+bool Autorestart::findRoblox()
 {
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
@@ -49,11 +49,11 @@ bool AutorestartClass::findRoblox()
 	return false;
 }
 
-void AutorestartClass::killRoblox()
+void Autorestart::killRoblox()
 {
 	system("cls");
 	Log("Killing Roblox", "AutoRestart", true);
-	bool found = AutorestartClass::findRoblox() ? true : false;
+	bool found = Autorestart::findRoblox() ? true : false;
 	if (found)
 	{
 		HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
@@ -81,16 +81,16 @@ void AutorestartClass::killRoblox()
 }
 
 
-void AutorestartClass::_usleep(int microseconds)
+void Autorestart::_usleep(int microseconds)
 {
 	std::this_thread::sleep_for(std::chrono::microseconds(microseconds));
 }
-void AutorestartClass::_sleep(int miliseconds)
+void Autorestart::_sleep(int miliseconds)
 {
 	std::this_thread::sleep_for(std::chrono::milliseconds(miliseconds));
 }
 
-std::string AutorestartClass::SHA256(const char *path)
+std::string Autorestart::SHA256(const char *path)
 {
 	std::ifstream fp(path, std::ios::in | std::ios::binary);
 
@@ -129,7 +129,7 @@ std::string AutorestartClass::SHA256(const char *path)
 	return os.str();
 }
 
-void AutorestartClass::start(bool forceminimize)
+void Autorestart::start(bool forceminimize)
 {
 	Log("How many minutes before restarting? (default is 20): ", "AutoRestart");
 	std::cin >> RestartTime;

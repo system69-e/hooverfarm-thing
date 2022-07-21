@@ -3,7 +3,7 @@
 #include <vector>
 #include <Windows.h>
 
-class AutorestartClass
+class Autorestart
 {
 public:
 	void start(bool);

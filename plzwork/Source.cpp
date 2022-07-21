@@ -7,7 +7,7 @@
 
 #include "request.h"
 #include "configmanagerroutine.h"
-#include "AutorestartClass.h"
+#include "autorestartroutine.h"
 #include "roblox.h"
 #include "terminal.h"
 #include "folder_search.h"
@@ -226,8 +226,8 @@ int main(int argc, char* argv[])
 			Log("Cookie file found", "AIO");
 		}
 
-		AutorestartClass Autorestart;
-		Autorestart.start(forceminimize);
+		Autorestart autorestart;
+		autorestart.start(forceminimize);
 	}
 }
 
