@@ -315,7 +315,7 @@ void Autorestart::start(bool forceminimize)
 			COORD coord = {0, 0};
 			SetConsoleCursorPosition(hConsole, coord);
 
-			if (FindWindow(NULL, "ROBLOX Crash") || FindWindow(NULL, "Roblox Crash")) goto error;
+			if (FindWindow(NULL, "ROBLOX Crash") || FindWindow(NULL, "Roblox Crash")) { goto error; };
 
 			Log(msg, "AutoRestart");
 
