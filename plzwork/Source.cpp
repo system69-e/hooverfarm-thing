@@ -6,8 +6,8 @@
 #include <Lmcons.h>
 
 #include "request.h"
-#include "configmanagerroutine.h"
-#include "autorestartroutine.h"
+#include "ConfigManager.h"
+#include "Autorestart.h"
 #include "roblox.h"
 #include "terminal.h"
 #include "folder_search.h"
@@ -207,8 +207,8 @@ int main(int argc, char* argv[])
 	{
 	case 1:
 		clear();
-		ConfigmanagerClass Configmanager;
-		Configmanager.configManager(res.data);
+		Configmanager configmanager;
+		configmanager.configManager(res.data);
 		break;
 	case 2:
 		//check if cookie.txt is present, if not make one

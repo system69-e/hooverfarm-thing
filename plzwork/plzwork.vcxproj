@@ -150,8 +150,8 @@
     <ClCompile Include="logger.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="autorestartroutine.h" />
-    <ClInclude Include="configmanagerroutine.h" />
+    <ClInclude Include="Autorestart.h" />
+    <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="request.h" />
     <ClInclude Include="roblox.h" />
     <ClInclude Include="folder_search.h" />

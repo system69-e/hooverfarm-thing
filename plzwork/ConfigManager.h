@@ -1,6 +1,7 @@
 #pragma once
+#include <string>
 
-class ConfigmanagerClass
+class Configmanager
 {
 	public:
 		void createConfig(int input, const std::string& link);

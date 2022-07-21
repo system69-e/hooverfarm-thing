@@ -41,7 +41,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="configmanagerroutine.h">
+    <ClInclude Include="ConfigManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="request.h">
@@ -57,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Autorestart.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

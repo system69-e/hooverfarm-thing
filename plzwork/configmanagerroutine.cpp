@@ -9,7 +9,7 @@
 namespace fs = std::filesystem;
 
 #include "terminal.h"
-#include "configmanagerroutine.h"
+#include "ConfigManager.h"
 #include "logger.h"
 
 struct Config
@@ -236,7 +236,7 @@ read_items:
     return true;
 }
 
-void ConfigmanagerClass::createConfig(int input, const std::string& link)
+void Configmanager::createConfig(int input, const std::string& link)
 {
     clear();
     //-- switch to handle user's choice
@@ -253,7 +253,7 @@ void ConfigmanagerClass::createConfig(int input, const std::string& link)
     clear();
 }
 
-bool ConfigmanagerClass::checkConfig()
+bool Configmanager::checkConfig()
 {
     //-- check if file is present in ../autoexec, currently unused
     std::ifstream file;
@@ -270,7 +270,7 @@ bool ConfigmanagerClass::checkConfig()
     }
 }
 
-void ConfigmanagerClass::configManager(const std::string link)
+void Configmanager::configManager(const std::string link)
 {
 	//check if current directory is workspace using filesystem class
     std::string path = std::filesystem::current_path().string();
