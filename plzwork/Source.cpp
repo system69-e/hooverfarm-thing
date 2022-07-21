@@ -35,7 +35,7 @@ std::vector<std::string> get_drives();
 
 int main(int argc, char* argv[])
 {
-	SetConsoleTitle("Floppafarm AIO tool Version 1.0 - by DarkNet#7679 & Sightem#4821 - https://discord.gg/u2vU98KfFS");
+	SetConsoleTitle("Floppafarm AIO tool Version 1.9.2 - by DarkNet#7679 & Sightem#4821 - https://discord.gg/u2vU98KfFS");
 
 	bool ontop = 1;
 	bool windowsize = 1;

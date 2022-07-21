@@ -83,7 +83,7 @@ const std::string items[] {
     "DEO's Diary",
     "Stone Mask",
     "Quinton's Glove",
-    "Ancient Scroll"
+    "Ancient Scroll",
     "Steel Balls",
 };
 
