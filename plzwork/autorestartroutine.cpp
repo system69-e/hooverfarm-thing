@@ -1,4 +1,4 @@
-#include "AutorestartClass.h"
+#include "autorestartroutine.h"
 #include "roblox.h"
 #include "terminal.h"
 #include "logger.h"
@@ -16,6 +16,7 @@
 #pragma warning(disable : 4996)
 // OpenSSL Library
 #include <openssl/sha.h>
+
 
 int RestartTime = 20;
 void AutorestartClass::unlockRoblox()
@@ -131,7 +132,7 @@ std::string AutorestartClass::SHA256(const char *path)
 
 void AutorestartClass::start(bool forceminimize)
 {
-	Log("How many minutes before restarting? (default is 20): ", "AutoRestart");
+	Log("How many minutes before restarting? ", "AutoRestart");
 	std::cin >> RestartTime;
 
 	Log("Are you using Synapse? (y/n)", "AutoRestart");
@@ -314,10 +315,13 @@ void AutorestartClass::start(bool forceminimize)
 			COORD coord = {0, 0};
 			SetConsoleCursorPosition(hConsole, coord);
 
+			if (FindWindow(NULL, "ROBLOX Crash") || FindWindow(NULL, "Roblox Crash")) goto error;
+
 			Log(msg, "AutoRestart");
 
 			_usleep(10000);
 		}
+		error:
 
 		killRoblox();
 		_sleep(5000);
