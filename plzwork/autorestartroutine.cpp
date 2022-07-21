@@ -36,7 +36,7 @@ void AutorestartClass::killRoblox()
 	clear();
 	AutorestartClass Autorestart;
 	Functions functions;
-	functions.Log("Killing Roblox", "Autorestart");
+	functions.Log("Killing Roblox", "Autorestart", 1);
 	// now get all the child processes of the main process
 	HANDLE hProcessSnap;
 	PROCESSENTRY32 pe32;
@@ -64,7 +64,7 @@ void AutorestartClass::killRoblox()
 		}
 	} while (Process32Next(hProcessSnap, &pe32));
 	this->robloxProcesses.clear();
-	functions.Log("Killed Roblox", "Autorestart");
+	functions.Log("Killed Roblox", "Autorestart", 1);
 	CloseHandle(hProcessSnap);
 
 	return;
