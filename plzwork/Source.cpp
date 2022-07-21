@@ -157,6 +157,15 @@ int main(int argc, char* argv[])
 				config.close();
 			}
 		}
+		else
+		{
+			std::cout << "No config file found, creating one" << std::endl;
+			std::ofstream config;
+			config.open("config.ini");
+			
+			//input current path
+			config << current_path;
+		}
 	}
 	else
 	{

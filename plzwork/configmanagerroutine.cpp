@@ -49,7 +49,7 @@ void readcfg()
 
     //get the parent folder of line
 	std::string parentFolder = line.substr(0, line.find_last_of("\\"));
-    autoExecPath = parentFolder + "\\autoexec";
+    autoExecPath = parentFolder + "\\autoexec" + configFile;
 }
 
 Config configurations[]
@@ -249,8 +249,7 @@ void ConfigmanagerClass::createConfig(int input, const std::string& link)
         std::cout << "Config creation failed" << std::endl;
     }
     //-- move the file to the autoexec folder
-    if(!fs::exists(autoExecPath)) fs::create_directory(autoExecPath);
-    fs::rename(configFile, autoExecPath + "\\" + configFile);
+    fs::rename(configFile, autoExecPath);
     clear();
 }
 
