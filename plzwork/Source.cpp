@@ -201,14 +201,15 @@ int main(int argc, char* argv[])
 	//-- read the user's choice
 	int choice;
 	std::cin >> choice;
+
+	Configmanager configmanager(res.data);
 	
 	//-- switch handling the user's choice
 	switch (choice)
 	{
 	case 1:
 		clear();
-		Configmanager configmanager;
-		configmanager.configManager(res.data);
+		configmanager.configManager();
 		break;
 	case 2:
 		//check if cookie.txt is present, if not make one

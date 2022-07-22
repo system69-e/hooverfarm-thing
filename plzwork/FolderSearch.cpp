@@ -7,7 +7,6 @@
 #include <chrono>
 
 
-
 static volatile long long _m_count = 0;
 static volatile bool _m_stop_all;
 
@@ -45,7 +44,7 @@ void thread_func(std::promise<bool>* p, fs::directory_entry entry, search_contex
     traverse(entry, ctx);
     p->set_value(true);
 }
-
+ 
 int start_deep_traverse_search(fs::path start, search_context* ctx, int maxDepth = 2) {
     std::vector<std::promise<bool>*> promises;
     fs::path last = start;

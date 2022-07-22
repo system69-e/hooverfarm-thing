@@ -10,29 +10,13 @@ namespace fs = std::filesystem;
 
 #include "terminal.h"
 #include "ConfigManager.h"
+#include "CustomConfig.h"
 #include "logger.h"
 
-struct Config
-{
-    float Teleport_Timing;
-    bool Use_Ribcages;
-    bool Farm_Shinys;
-    struct {
-        bool Farm_Pity;
-        float Pity_Goal;
-    } Pity_Config;
-    bool Reduce_Crashes;
-    bool Anti_Lag;
-    /*
-    struct {
-    bool Use_Webhook;
-    std::string Webhook_URL;
-    } Webhook_config;
-  */
-};
-
 const std::string configFile = "hooverYBA.lua";
-std::string autoExecPath = "../autoexec/" + configFile;
+std::string basePath = "../autoexec/";
+std::string autoExecPath = basePath + configFile;
+std::string customConfigsPath = "../aio/";
 
 
 //read config.ini
@@ -49,7 +33,8 @@ void readcfg()
 
     //get the parent folder of line
 	std::string parentFolder = line.substr(0, line.find_last_of("\\"));
-    autoExecPath = parentFolder + "/autoexec/" + configFile;
+	basePath = parentFolder + "/autoexec/";
+    autoExecPath = basePath + configFile;
 }
 
 Config configurations[]
@@ -64,6 +49,19 @@ Config configurations[]
     0.5f, false, false, { true, 2.0f }, true, true  //-- farm pity only
   },
 
+};
+
+// for custom config
+ConfigOption options[]{
+    {.name = "Teleport Timing", .type = ConfigOption::FLOAT, .offset = offsetof(Config, Teleport_Timing), opt_default(f, 3.0f)},
+    {.name = "Use Ribcages", .type = ConfigOption::BOOL, .offset = offsetof(Config, Use_Ribcages), opt_default(b, false)},
+    {.name = "Farm Shinys", .type = ConfigOption::BOOL, .offset = offsetof(Config, Farm_Shinys), opt_default(b, true)},
+    {.name = "Farm Pity", .type = ConfigOption::BOOL, .offset = offsetof(Config, Pity_Config.Farm_Pity), opt_default(b, false)},
+    {.name = "Pity Goal", .type = ConfigOption::FLOAT, .offset = offsetof(Config, Pity_Config.Pity_Goal), .depends = offsetof(Config, Pity_Config.Farm_Pity)},
+    {.name = "Reduce Crashes", .type = ConfigOption::BOOL, .offset = offsetof(Config, Reduce_Crashes), opt_default(b, true)},
+    {.name = "Anti Lag", .type = ConfigOption::BOOL, .offset = offsetof(Config, Anti_Lag), opt_default(b, true)},
+    //{.name = "Webhook URL",.type = ConfigOption::STRING,.offset = offsetof(Config, Webhook_config.Webhook_URL)},
+    //{.name = "Use Webhook",.type = ConfigOption::BOOL,.offset = offsetof(Config, Webhook_config.Use_Webhook)},
 };
 
 const std::string configNames[]
@@ -94,21 +92,10 @@ const std::string items[] {
 #define named_string_option(name, value) "[\"" << #name << "\"] = " << '"' << config.value << '"'<< std::endl;
 #define named_bool_option(name, value) "[\"" << #name << "\"] = " << (config.value ? "true" : "false") << ',' << std::endl;
 
-bool inputToFile(const std::string& link, Config config = configurations[0])
-{
-    if (config.Pity_Config.Farm_Pity)
-    {
-        goto pity;
-    }
-    else
-    {
-        goto normal;
-    }
-
-pity:
+bool read_pity(Config* cfg) {
     getc(stdin); //-- skip remainin chars
 read:
-    Log("Enter pity goal: ", "ConfigManager");
+    Log("Enter pity goal: ", "ConfigManager", false);
 
     float f;
     try
@@ -119,11 +106,11 @@ read:
         while ((c = getchar()) != '\n')
             buffer += c;
 
-		if (std::stof(buffer) < 1.5f || std::stof(buffer) > 5.0f)
-		{
+        if (std::stof(buffer) < 1.5f || std::stof(buffer) > 5.0f)
+        {
             Log("Invalid input, please try again!", LOG_ERROR);
-			goto read;
-		}
+            goto read;
+        }
 
         if (buffer.empty())
             f = 2.0f;
@@ -135,19 +122,19 @@ read:
         goto read;
     }
 
-    config.Pity_Config.Pity_Goal = f;
+    cfg->Pity_Config.Pity_Goal = f;
+    return true;
+}
 
-
-normal:
-    getc(stdin); //-- skip remaining chars
-    /*
+/*bool read_webhook(Config* cfg) {
+    getc(stdin);
     std::cout << "Do you want to use the webhook feature? (y/n)";
     char c;
     std::cin >> c;
     switch (c)
     {
       case 'y': case 'Y':
-          config.Webhook_config.Use_Webhook = true;
+          cfg->Webhook_config.Use_Webhook = true;
           break;
       case 'n': case 'N':
           config.Webhook_config.Use_Webhook = false;
@@ -157,24 +144,24 @@ normal:
           break;
     }
 
-    if (config.Webhook_config.Use_Webhook)
+    if (cfg->Webhook_config.Use_Webhook)
     {
       std::cout << "Enter webhook URL: ";
       std::string buffer;
       std::cin >> buffer;
-      config.Webhook_config.Webhook_URL = buffer;
+      cfg->Webhook_config.Webhook_URL = buffer;
     }
+}*/
 
-    */
-    //-- actually handles the input to the file
-read_items:
+std::vector<int> read_items() {
+    getc(stdin); //-- skip remaining chars
     Log("Items to farm:", "ConfigManager");
-    for(int i = 0; i < sizeof(items) / sizeof(items[0]); i++)
+    for (int i = 0; i < sizeof(items) / sizeof(items[0]); i++)
     {
         std::cout << "     " << i + 1 << "." << items[i] << std::endl;
     }
     Log("Enter the items you want to farm (example: 1,3,6): ", "ConfigManager", false);
-	
+
     std::string user_input;
     std::getline(std::cin, user_input);
     std::vector<int> user_choice;
@@ -186,10 +173,15 @@ read_items:
         if (ss.peek() == ',')
             ss.ignore();
     }
+    return user_choice;
+}
 
+bool Configmanager::inputToFile(const std::string& filename, Config config)
+{
+normal:
 	//-- file creation
     std::ofstream file;
-    file.open(configFile);
+    file.open(filename);
 
     file << option(Teleport_Timing)
     file << bool_option(Use_Ribcages)
@@ -205,9 +197,11 @@ read_items:
     //file << named_string_option(Webhook_URL, Webhook_config.Webhook_URL)
     //file << "}" << std::endl;
 
+read_items:
+	std::vector<int> user_choice = read_items();
 
     file << "getgenv()[\"Extra_Items\"] = {" << std::endl;
-	
+
     for (int i = 0; i < user_choice.size(); i++)
     {
         int choice = user_choice[i];
@@ -236,11 +230,21 @@ read_items:
     return true;
 }
 
-void Configmanager::createConfig(int input, const std::string& link)
+bool handle_config(Configmanager* manager, Config config = configurations[0]) {
+    if (config.Pity_Config.Farm_Pity) {
+        read_pity(&config);
+    }
+    //if (config.Webhook_config.Use_Webhook) {
+    //	read_webhook(&config);
+    //}
+    return manager->inputToFile(configFile, config);
+}
+
+void Configmanager::createConfig(int input)
 {
     clear();
     //-- switch to handle user's choice
-    if (inputToFile(link, configurations[input - 1]))
+    if (handle_config(this, configurations[input - 1]))
     {
         Log("Config created successfully", "ConfigManager");
     }
@@ -250,6 +254,40 @@ void Configmanager::createConfig(int input, const std::string& link)
     }
     //-- move the file to the autoexec folder
     fs::rename(configFile, autoExecPath);
+    clear();
+}
+
+void Configmanager::createCustomConfig() {
+    clear();
+    std::string filename;
+	std::cout << "Enter the name of the file: ";
+	std::cin >> filename;
+
+    // check if file exists
+	if (fs::exists(customConfigsPath + filename))
+	{
+        Log("File already exists. It will be overwritten. Press enter to proceed", LOG_WARNING);
+        getc(stdin);
+        wait();
+		// delete old file
+		fs::remove(customConfigsPath + filename);
+	}
+	
+    Config config{};
+    getc(stdin); //-- skip remaining chars
+    parse_custom(options, sizeof(options) / sizeof(options[0]), &config);
+	if (inputToFile(filename, config))
+	{
+		Log("Config created successfully", "ConfigManager");
+	}
+	else
+	{
+		Log("Config creation failed", LOG_ERROR);
+	}
+	
+	//-- move the file to the autoexec folder
+    fs::copy(filename, customConfigsPath + filename); // save to autoexec
+	fs::rename(filename, autoExecPath); // but then move the file to the custom configs folder
     clear();
 }
 
@@ -270,24 +308,86 @@ bool Configmanager::checkConfig()
     }
 }
 
-void Configmanager::configManager(const std::string link)
-{
-	//check if current directory is workspace using filesystem class
-    std::string path = std::filesystem::current_path().string();
-	if (path.find("workspace") == std::string::npos)
-	{
-        readcfg();
-	}
+void customConfigHandler(Configmanager* manager) {
 
-    size_t configSize = sizeof(configNames) / sizeof(configNames[0]);
-    for (int i = 0; i < configSize; i++)
+    clear();
+    Log("Chose one of the options below:", "ConfigManager");
+    std::cout << "[1] Choose one of your already created configurations" << std::endl;
+    std::cout << "[2] Create a new configuration" << std::endl;
+
+    if (!fs::exists(customConfigsPath))
     {
-        std::cout << "[" << i + 1 << "] " << configNames[i] << " config" << std::endl;
+        fs::create_directory(customConfigsPath);
     }
 
     int input;
-    Log("Enter config number:", "ConfigManager");
     std::cin >> input;
 
-    createConfig(input, link);
+    if (input == 1) {
+        // read the configs from the folder and list the names, then handle reading the configurations and putting them into the the console
+        std::vector<std::string> configs;
+        for (auto& p : fs::directory_iterator(customConfigsPath)) {
+            configs.push_back(p.path().filename().string());
+        }
+
+        if (configs.empty()) {
+            Log("No configurations created", "ConfigManager");
+            getc(stdin);
+            wait();
+            return;
+        }
+
+        Log("Avaiable configurations: ", "ConfigManager");
+        for (int i = 0; i < configs.size(); i++) {
+            std::cout << '[' << i + 1 << "] " << configs[i] << std::endl;
+        }
+		Log("Select one option: ", "ConfigManager", false);
+        std::cin >> input;
+        if (input > 0 && input <= configs.size()) {
+            // copy file to autoexec and rename it to the name of the file
+            fs::copy(customConfigsPath + configs[input - 1], basePath);
+			fs::rename(basePath + configs[input - 1], autoExecPath);
+        } else {
+            Log("Invalid input, try again.", LOG_ERROR);
+        }
+    } else {
+        manager->createCustomConfig();
+    }
+
+}
+
+void Configmanager::configManager()
+{
+
+    Log("Chose one of the options below:", "ConfigManager");
+    std::cout << "[1] Choose one of the preconfigured options" << std::endl;
+    std::cout << "[2] Manage custom created configurations" << std::endl;
+
+    int input;
+    std::cin >> input;
+    if(input == 2) {
+        customConfigHandler(this);
+    } else if (input == 1) { 
+
+        //check if current directory is workspace using filesystem class
+        std::string path = std::filesystem::current_path().string();
+        if (path.find("workspace") == std::string::npos)
+        {
+            readcfg();
+        }
+
+        size_t configSize = sizeof(configNames) / sizeof(configNames[0]);
+        for (int i = 0; i < configSize; i++)
+        {
+            std::cout << "[" << i + 1 << "] " << configNames[i] << " config" << std::endl;
+        }
+
+        int input;
+        Log("Enter config number:", "ConfigManager");
+        std::cin >> input;
+
+        createConfig(input);
+    } else {
+        Log("Invalid input, try again.", LOG_ERROR);
+    }
 }

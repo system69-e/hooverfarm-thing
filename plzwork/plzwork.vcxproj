@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="Autorestart.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
+    <ClCompile Include="CustomConfig.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Request.cpp" />
     <ClCompile Include="Roblox.cpp" />
@@ -152,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="Autorestart.h" />
     <ClInclude Include="ConfigManager.h" />
+    <ClInclude Include="CustomConfig.h" />
     <ClInclude Include="Request.h" />
     <ClInclude Include="Roblox.h" />
     <ClInclude Include="FolderSearch.h" />
