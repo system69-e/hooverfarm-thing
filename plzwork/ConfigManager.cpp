@@ -53,7 +53,7 @@ Config configurations[]
 
 // for custom config
 ConfigOption options[]{
-    {.name = "Teleport Timing", .type = ConfigOption::FLOAT, .offset = offsetof(Config, Teleport_Timing), opt_default(f, 3.0f)},
+    {.name = "Teleport Timing", .type = ConfigOption::FLOAT, .offset = offsetof(Config, Teleport_Timing), opt_default(f, 0.5f)},
     {.name = "Use Ribcages", .type = ConfigOption::BOOL, .offset = offsetof(Config, Use_Ribcages), opt_default(b, false)},
     {.name = "Farm Shinys", .type = ConfigOption::BOOL, .offset = offsetof(Config, Farm_Shinys), opt_default(b, true)},
     {.name = "Farm Pity", .type = ConfigOption::BOOL, .offset = offsetof(Config, Pity_Config.Farm_Pity), opt_default(b, false)},
