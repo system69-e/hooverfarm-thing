@@ -230,8 +230,10 @@ read_items:
     return true;
 }
 
-bool handle_config(Configmanager* manager, Config config = configurations[0]) {
-    if (config.Pity_Config.Farm_Pity) {
+bool handle_config(Configmanager* manager, Config config = configurations[0]) 
+{
+    if (config.Pity_Config.Farm_Pity) 
+    {
         read_pity(&config);
     }
     //if (config.Webhook_config.Use_Webhook) {
@@ -326,11 +328,13 @@ void customConfigHandler(Configmanager* manager) {
     if (input == 1) {
         // read the configs from the folder and list the names, then handle reading the configurations and putting them into the the console
         std::vector<std::string> configs;
-        for (auto& p : fs::directory_iterator(customConfigsPath)) {
+        for (auto& p : fs::directory_iterator(customConfigsPath)) 
+        {
             configs.push_back(p.path().filename().string());
         }
 
-        if (configs.empty()) {
+        if (configs.empty()) 
+        {
             Log("No configurations created", "ConfigManager");
             getc(stdin);
             wait();
@@ -365,9 +369,12 @@ void Configmanager::configManager()
 
     int input;
     std::cin >> input;
-    if(input == 2) {
+    if(input == 2) 
+    {
         customConfigHandler(this);
-    } else if (input == 1) { 
+    } 
+    else if (input == 1) 
+    { 
 
         //check if current directory is workspace using filesystem class
         std::string path = std::filesystem::current_path().string();
@@ -387,7 +394,9 @@ void Configmanager::configManager()
         std::cin >> input;
 
         createConfig(input);
-    } else {
+    } 
+    else 
+    {
         Log("Invalid input, try again.", LOG_ERROR);
     }
 }
