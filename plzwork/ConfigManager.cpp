@@ -6,12 +6,13 @@
 #include <sstream>
 #include <filesystem>
 
-namespace fs = std::filesystem;
-
+//-- User libs
 #include "terminal.h"
 #include "ConfigManager.h"
 #include "CustomConfig.h"
 #include "logger.h"
+
+namespace fs = std::filesystem;
 
 const std::string configFile = "hooverYBA.lua";
 std::string basePath = "../autoexec/";

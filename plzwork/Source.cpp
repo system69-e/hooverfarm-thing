@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <Lmcons.h>
 
+//-- User libs
 #include "Request.h"
 #include "ConfigManager.h"
 #include "Autorestart.h"
@@ -13,7 +14,7 @@
 #include "FolderSearch.h"
 #include "Logger.h"
 
-// link libraries
+//-- External libs
 #ifdef _DEBUG
 #pragma comment (lib, "curl/libcurl_a_debug.lib")
 #else

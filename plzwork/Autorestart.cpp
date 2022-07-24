@@ -1,7 +1,3 @@
-#include "Autorestart.h"
-#include "Roblox.h"
-#include "Terminal.h"
-#include "Logger.h"
 #include <iostream>
 #include <windows.h>
 #include <Tlhelp32.h>
@@ -13,10 +9,15 @@
 #include <filesystem>
 #include <Lmcons.h>
 
-#pragma warning(disable : 4996)
-// OpenSSL Library
-#include <openssl/sha.h>
+//-- User libs
+#include "Autorestart.h"
+#include "Roblox.h"
+#include "Terminal.h"
+#include "Logger.h"
 
+//-- Exxternal libs
+#pragma warning(disable : 4996)
+#include <openssl/sha.h>
 
 int RestartTime = 20;
 void Autorestart::unlockRoblox()
@@ -104,7 +105,6 @@ std::string Autorestart::SHA256(const char *path)
 
 	const std::size_t buffer_size{1 << 12};
 	char buffer[buffer_size];
-
 	unsigned char hash[SHA256_DIGEST_LENGTH] = {0};
 
 	SHA256_CTX ctx;

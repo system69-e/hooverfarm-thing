@@ -3,7 +3,6 @@
 
 #define mfptr(T) int(*T)(int argc, char** argv)
 
-
 struct Config
 {
     float Teleport_Timing; // offset 0
