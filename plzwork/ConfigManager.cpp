@@ -4,6 +4,7 @@
 #include <limits>
 #include <vector>
 #include <sstream>
+#include <tuple>
 #include <filesystem>
 
 //-- User libs
@@ -91,8 +92,9 @@ const std::string items[] {
 #define named_string_option(name, value) "[\"" << #name << "\"] = " << '"' << config.value << '"'<< std::endl;
 #define named_bool_option(name, value) "[\"" << #name << "\"] = " << (config.value ? "true" : "false") << ',' << std::endl;
 
-bool read_pity(Config* cfg) {
-    getc(stdin); //-- skip remainin chars
+bool read_pity(Config* cfg) 
+{
+    std::ignore = getc(stdin); //-- skip remainin chars
 read:
     Log("Enter pity goal: ", "ConfigManager", false);
 
@@ -154,7 +156,7 @@ bool read_webhook(Config* cfg) {
 */
 
 std::vector<int> read_items() {
-    getc(stdin); //-- skip remaining chars
+    std::ignore = getc(stdin); //-- skip remaining chars
     Log("Items to farm:", "ConfigManager");
     for (int i = 0; i < sizeof(items) / sizeof(items[0]); i++)
     {
@@ -263,14 +265,14 @@ void Configmanager::createCustomConfig() {
 	if (fs::exists(customConfigsPath + filename))
 	{
         Log("File already exists. It will be overwritten. Press enter to proceed", LOG_WARNING);
-        getc(stdin);
+        std::ignore = getc(stdin);
         wait();
 		// delete old file
 		fs::remove(customConfigsPath + filename);
 	}
 	
     Config config{};
-    getc(stdin); //-- skip remaining chars
+    std::ignore = getc(stdin); //-- skip remaining chars
     parse_custom(options, sizeof(options) / sizeof(options[0]), &config);
 	if (inputToFile(filename, config))
 	{
@@ -337,7 +339,7 @@ void Configmanager::customConfigHandler(Configmanager* manager)
             if (configs.empty())
             {
                 Log("No configurations created", "ConfigManager");
-                getc(stdin);
+                std::ignore = getc(stdin);
                 wait();
                 return;
             }

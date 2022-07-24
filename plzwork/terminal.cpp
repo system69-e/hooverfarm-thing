@@ -1,10 +1,11 @@
 #include "Terminal.h"
 #include <Windows.h>
+#include <tuple>
 
 void wait() 
 {
 	printf("Press enter to continue...\n");
-	getchar(); // wait for the user to press enter
+    std::ignore = getchar(); // wait for the user to press enter
 }
 
 void clear() 

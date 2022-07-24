@@ -295,6 +295,8 @@ void Autorestart::start(bool forceminimize)
 			}
 			WaitForSingleObject(pi.hProcess, INFINITE);
 			this->robloxProcesses.push_back(pi);
+			CloseHandle(pi.hProcess);
+			CloseHandle(pi.hThread);
 		}
 
 		auto start = std::chrono::steady_clock::now();
