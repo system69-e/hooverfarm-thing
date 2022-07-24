@@ -178,7 +178,6 @@ std::vector<int> read_items() {
 
 bool Configmanager::inputToFile(const std::string& filename, Config config)
 {
-normal:
 	//-- file creation
     std::ofstream file;
     file.open(filename);

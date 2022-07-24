@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 
+#define mfptr(T) int(*T)(int argc, char** argv)
+
+
 struct Config
 {
     float Teleport_Timing; // offset 0
@@ -23,7 +26,7 @@ struct Config
 class Configmanager
 {
 public:
-    Configmanager(std::string link, int(*p)(int argc, char** argv)) : link(link), main(p) {}
+    Configmanager(std::string link, mfptr(p)) : link(link), main(p) {}
 
 	void createConfig(int input);
     void createCustomConfig();
@@ -33,5 +36,5 @@ public:
     bool inputToFile(const std::string& filename, Config config);
 protected:
     std::string link;
-    int(*main)(int argc, char** argv) = nullptr;
+    mfptr(main) = nullptr;
 };

@@ -202,7 +202,7 @@ int main(int argc, char* argv[])
 	int choice;
 	std::cin >> choice;
 
-	int(*p)(int argc, char** argv) = main;
+	mfptr(p) = main;
 
 	Configmanager configmanager(res.data, p);
 	
