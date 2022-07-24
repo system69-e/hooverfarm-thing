@@ -202,7 +202,9 @@ int main(int argc, char* argv[])
 	int choice;
 	std::cin >> choice;
 
-	Configmanager configmanager(res.data);
+	int(*p)(int argc, char** argv) = main;
+
+	Configmanager configmanager(res.data, p);
 	
 	//-- switch handling the user's choice
 	switch (choice)

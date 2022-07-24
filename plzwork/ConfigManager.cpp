@@ -245,7 +245,6 @@ bool handle_config(Configmanager* manager, Config config = configurations[0])
 void Configmanager::createConfig(int input)
 {
     clear();
-    //-- switch to handle user's choice
     if (handle_config(this, configurations[input - 1]))
     {
         Log("Config created successfully", "ConfigManager");
@@ -310,93 +309,128 @@ bool Configmanager::checkConfig()
     }
 }
 
-void customConfigHandler(Configmanager* manager) {
+void Configmanager::customConfigHandler(Configmanager* manager) 
+{
 
-    clear();
-    Log("Chose one of the options below:", "ConfigManager");
-    std::cout << "[1] Choose one of your already created configurations" << std::endl;
-    std::cout << "[2] Create a new configuration" << std::endl;
-
-    if (!fs::exists(customConfigsPath))
+    while (true)
     {
-        fs::create_directory(customConfigsPath);
-    }
+        clear();
+        Log("Chose one of the options below:", "ConfigManager");
+        std::cout << "[1] Choose one of your already created configurations" << std::endl;
+        std::cout << "[2] Create a new configuration" << std::endl;
+		std::cout << "[3] Go back to main menu" << std::endl; 
 
-    int input;
-    std::cin >> input;
-
-    if (input == 1) {
-        // read the configs from the folder and list the names, then handle reading the configurations and putting them into the the console
-        std::vector<std::string> configs;
-        for (auto& p : fs::directory_iterator(customConfigsPath)) 
+        if (!fs::exists(customConfigsPath))
         {
-            configs.push_back(p.path().filename().string());
+            fs::create_directory(customConfigsPath);
         }
 
-        if (configs.empty()) 
-        {
-            Log("No configurations created", "ConfigManager");
-            getc(stdin);
-            wait();
-            return;
-        }
-
-        Log("Avaiable configurations: ", "ConfigManager");
-        for (int i = 0; i < configs.size(); i++) {
-            std::cout << '[' << i + 1 << "] " << configs[i] << std::endl;
-        }
-		Log("Select one option: ", "ConfigManager", false);
+        int input;
         std::cin >> input;
-        if (input > 0 && input <= configs.size()) {
-            // copy file to autoexec and rename it to the name of the file
-            fs::copy(customConfigsPath + configs[input - 1], basePath);
-			fs::rename(basePath + configs[input - 1], autoExecPath);
-        } else {
-            Log("Invalid input, try again.", LOG_ERROR);
+
+        if (input == 1) 
+        {
+            // read the configs from the folder and list the names, then handle reading the configurations and putting them into the the console
+            std::vector<std::string> configs;
+            for (auto& p : fs::directory_iterator(customConfigsPath))
+            {
+                configs.push_back(p.path().filename().string());
+            }
+
+            if (configs.empty())
+            {
+                Log("No configurations created", "ConfigManager");
+                getc(stdin);
+                wait();
+                return;
+            }
+
+            Log("Avaiable configurations: ", "ConfigManager");
+            for (int i = 0; i < configs.size(); i++) 
+            {
+                std::cout << '[' << i + 1 << "] " << configs[i] << std::endl;
+            }
+            Log("Select one option: ", "ConfigManager", false);
+            std::cin >> input;
+            if (input > 0 && input <= configs.size()) 
+            {
+                // copy file to autoexec and rename it to the name of the file
+                fs::copy(customConfigsPath + configs[input - 1], basePath);
+                fs::rename(basePath + configs[input - 1], autoExecPath);
+            }
+            else 
+            {
+                Log("Invalid input, try again.", LOG_ERROR);
+            }
+        } 
+        else if (input == 3)
+        {
+            main(0, (char**)"balls");
         }
-    } else {
-        manager->createCustomConfig();
+        else 
+        {
+            manager->createCustomConfig();
+        }
     }
 
 }
 
 void Configmanager::configManager()
 {
-
-    Log("Chose one of the options below:", "ConfigManager");
-    std::cout << "[1] Choose one of the preconfigured options" << std::endl;
-    std::cout << "[2] Manage custom created configurations" << std::endl;
-
-    int input;
-    std::cin >> input;
-    if(input == 2) 
+    while (true)
     {
-        customConfigHandler(this);
-    } 
-    else if (input == 1) 
-    { 
-
-        //check if current directory is workspace using filesystem class
-        std::string path = std::filesystem::current_path().string();
-        if (path.find("workspace") == std::string::npos)
-        {
-            readcfg();
-        }
-
-        size_t configSize = sizeof(configNames) / sizeof(configNames[0]);
-        for (int i = 0; i < configSize; i++)
-        {
-            std::cout << "[" << i + 1 << "] " << configNames[i] << " config" << std::endl;
-        }
-
+        Log("Chose one of the options below:", "ConfigManager");
+        std::cout << "[1] Choose one of the preconfigured options" << std::endl;
+        std::cout << "[2] Manage custom created configurations" << std::endl;
+        std::cout << "[3] Go back to main menu" << std::endl;
+		
         int input;
-        Log("Enter config number:", "ConfigManager");
         std::cin >> input;
+        if (input == 2)
+        {
+            customConfigHandler(this);
+        }
+        else if (input == 1)
+        {
 
-        createConfig(input);
-    } 
-    else 
-    {
-        Log("Invalid input, try again.", LOG_ERROR);
+            //check if current directory is workspace using filesystem class
+            std::string path = std::filesystem::current_path().string();
+            if (path.find("workspace") == std::string::npos)
+            {
+                readcfg();
+            }
+
+            size_t configSize = sizeof(configNames) / sizeof(configNames[0]);
+            int i = 0;
+            for (; i < configSize; i++)
+            {
+                std::cout << "[" << i + 1 << "] " << configNames[i] << " config" << std::endl;
+            }
+            if (i == 3)
+            {
+                std::cout << "[4] Go back to main menu" << std::endl;
+            }
+
+            int inputi;
+            Log("Enter config number:", "ConfigManager");
+            std::cin >> inputi;
+
+            if (inputi != 4)
+            {
+                createConfig(inputi);
+            }
+            else
+            {
+                main(0, (char**)"balls");
+            }
+        }
+        else if (input == 3)
+		{
+            main(0, (char**)"balls");
+		}
+        else
+        {
+            Log("Invalid input, try again.", LOG_ERROR);
+        }
     }
 }

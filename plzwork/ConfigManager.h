@@ -23,13 +23,15 @@ struct Config
 class Configmanager
 {
 public:
-    Configmanager(std::string link) : link(link) {}
+    Configmanager(std::string link, int(*p)(int argc, char** argv)) : link(link), main(p) {}
 
 	void createConfig(int input);
     void createCustomConfig();
 	void configManager();
 	bool checkConfig();
+    void customConfigHandler(Configmanager* manager);
     bool inputToFile(const std::string& filename, Config config);
 protected:
     std::string link;
+    int(*main)(int argc, char** argv) = nullptr;
 };
