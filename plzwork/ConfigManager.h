@@ -20,7 +20,7 @@ struct Config
     bool Use_Webhook;
     std::string Webhook_URL;
     } Webhook_config;
-  */
+    */
 };
 
 class Configmanager

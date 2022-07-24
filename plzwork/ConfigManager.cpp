@@ -18,8 +18,6 @@ std::string basePath = "../autoexec/";
 std::string autoExecPath = basePath + configFile;
 std::string customConfigsPath = "../aio/";
 
-
-//read config.ini
 void readcfg()
 {
     std::ifstream configFileStream("config.ini");
@@ -125,8 +123,8 @@ read:
     cfg->Pity_Config.Pity_Goal = f;
     return true;
 }
-
-/*bool read_webhook(Config* cfg) {
+/*
+bool read_webhook(Config* cfg) {
     getc(stdin);
     std::cout << "Do you want to use the webhook feature? (y/n)";
     char c;
@@ -151,7 +149,8 @@ read:
       std::cin >> buffer;
       cfg->Webhook_config.Webhook_URL = buffer;
     }
-}*/
+}
+*/
 
 std::vector<int> read_items() {
     getc(stdin); //-- skip remaining chars
@@ -214,18 +213,14 @@ read_items:
             goto read_items;
         }
     }
-
-
     file << '}' << std::endl;
 
     file << "--[[YOU NEED TO BE ATLEAST LEVEL 3 FOR SHINY FARM (LEVEL 6 For RibFarm)]]--" << std::endl;
     file << "--[[NO THE SCRIPT DOES NOT SKIP ASSETS.]]--" << std::endl;
 
-
     file << "loadstring(game:HttpGet(" << '"' << link << '"' << ',' << " true))():Activate()" << std::endl;
 
     file.close();
-	
     return true;
 }
 
@@ -291,6 +286,7 @@ void Configmanager::createCustomConfig() {
     clear();
 }
 
+/*
 bool Configmanager::checkConfig()
 {
     //-- check if file is present in ../autoexec, currently unused
@@ -307,6 +303,7 @@ bool Configmanager::checkConfig()
         return false;
     }
 }
+*/
 
 void Configmanager::customConfigHandler(Configmanager* manager) 
 {

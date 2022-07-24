@@ -11,7 +11,8 @@ struct Response
     std::string headers;
 };
 
-class Request {
+class Request 
+{
 
 public:
     Request(std::string url) : url(url), data(""), headers(nullptr) {}
@@ -40,5 +41,4 @@ private:
     Response execute();
 
     CURL* curl;
-
 };
