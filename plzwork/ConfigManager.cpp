@@ -385,13 +385,8 @@ void Configmanager::configManager()
 		
         int input;
         std::cin >> input;
-        if (input == 2)
+        if (input == 1)
         {
-            customConfigHandler(this);
-        }
-        else if (input == 1)
-        {
-
             //check if current directory is workspace using filesystem class
             std::string path = std::filesystem::current_path().string();
             if (path.find("workspace") == std::string::npos)
@@ -419,6 +414,10 @@ void Configmanager::configManager()
             {
                 main(0, (char**)"balls");
             }
+        } 
+        else if (input == 2)
+        {
+            customConfigHandler(this);
         }
         else if (input == 3)
 		{
