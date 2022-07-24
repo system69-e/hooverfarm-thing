@@ -63,7 +63,6 @@ int main(int argc, char* argv[])
 		SetWindowLong(GetConsoleWindow(), GWL_STYLE, GetWindowLong(GetConsoleWindow(), GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
 	}
 
-
 	//-- get current username 
 	char username[UNLEN + 1];
 	DWORD username_len = UNLEN + 1;
@@ -71,12 +70,10 @@ int main(int argc, char* argv[])
 	std::string username_str = username;
 	
 	//-- check if current directory is workspace, else, go stupid
-
 	std::string current_path = std::filesystem::current_path().string();
 
 	if (!(std::filesystem::exists("config.ini")))
 	{
-
 		if (current_path.find("workspace") == std::string::npos)
 		{
 			Log("Not in workspace, initializing search for workspace");
@@ -214,8 +211,8 @@ int main(int argc, char* argv[])
 		configmanager.configManager();
 		break;
 	case 2:
-		//check if cookie.txt is present, if not make one
 		std::ifstream cookieFile("cookies.txt");
+		
 		if (!cookieFile.good())
 		{
 			Log("Cookie file not found, creating one", "AIO");

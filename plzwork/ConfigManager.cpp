@@ -405,18 +405,15 @@ void Configmanager::configManager()
             {
                 std::cout << "[" << i + 1 << "] " << configNames[i] << " config" << std::endl;
             }
-            if (i == 3)
-            {
-                std::cout << "[4] Go back to main menu" << std::endl;
-            }
+            std::cout << '[' << configSize + 1 << ']' << " Go back to main menu" << std::endl;
 
-            int inputi;
+            int innerinput;
             Log("Enter config number:", "ConfigManager");
-            std::cin >> inputi;
+            std::cin >> innerinput;
 
-            if (inputi != 4)
+            if (innerinput != 4)
             {
-                createConfig(inputi);
+                createConfig(innerinput);
             }
             else
             {
