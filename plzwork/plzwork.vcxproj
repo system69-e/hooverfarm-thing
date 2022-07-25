@@ -144,7 +144,6 @@
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="CustomConfig.cpp" />
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="Request.cpp" />
     <ClCompile Include="Roblox.cpp" />
     <ClCompile Include="FolderSearch.cpp" />
     <ClCompile Include="Terminal.cpp" />
@@ -154,7 +153,7 @@
     <ClInclude Include="Autorestart.h" />
     <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="CustomConfig.h" />
-    <ClInclude Include="Request.h" />
+    <ClInclude Include="Request.hpp" />
     <ClInclude Include="Roblox.h" />
     <ClInclude Include="FolderSearch.h" />
     <ClInclude Include="Terminal.h" />

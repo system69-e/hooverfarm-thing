@@ -24,9 +24,6 @@
     <ClCompile Include="Autorestart.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Request.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Roblox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -47,9 +44,6 @@
     <ClInclude Include="ConfigManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Request.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Roblox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -66,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CustomConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Request.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

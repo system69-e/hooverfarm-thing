@@ -6,7 +6,7 @@
 #include <Lmcons.h>
 
 //-- User libs
-#include "Request.h"
+#include "Request.hpp"
 #include "ConfigManager.h"
 #include "Autorestart.h"
 #include "Roblox.h"
