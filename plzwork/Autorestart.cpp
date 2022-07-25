@@ -14,6 +14,7 @@
 #include "Roblox.h"
 #include "Terminal.h"
 #include "Logger.h"
+#include "Request.hpp"
 
 //-- Exxternal libs
 #pragma warning(disable : 4996)
@@ -132,6 +133,9 @@ std::string Autorestart::SHA256(const char *path)
 
 bool Autorestart::validateCookie()
 {
+	clear();
+	Log("Validating cookies...", "AutoRestart", true);
+	
 	if (!std::filesystem::exists("cookies.txt"))
 	{
 		Log("Cookies.txt not found", "AutoRestart", true);
@@ -165,6 +169,25 @@ bool Autorestart::validateCookie()
 			return false;
 		}
 	}
+
+	Request request("https://auth.roblox.com/v1/authentication-ticket");
+	request.initalize();
+
+	for (auto& cookie : cookies)
+	{
+		request.set_cookie(".ROBLOSECURITY", cookie);
+		request.set_header("Referer", "https://www.roblox.com/");
+		Response response = request.post();
+		std::string csrfToken = response.headers["x-csrf-token"];
+
+		if (csrfToken.empty())
+		{
+			Log("A cookie in Cookies.txt is invalid", "AutoRestart", true);
+			system("pause");
+			return false;
+		}
+	}
+	Log("ze cookie(s) are valid!", "AutoRestart", true);
 }
 
 void Autorestart::start(bool forceminimize)
