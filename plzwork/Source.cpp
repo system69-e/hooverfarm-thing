@@ -212,23 +212,18 @@ int main(int argc, char* argv[])
 		configmanager.configManager();
 		break;
 	case 2:
-		std::ifstream cookieFile("cookies.txt");
+		Autorestart autorestart;
 		
-		if (!cookieFile.good())
+		if (autorestart.validateCookie())
 		{
-			Log("Cookie file not found, creating one", "AIO");
-			std::ofstream cookieFile("cookies.txt");
-			cookieFile << "";
-			cookieFile.close();
-			return 1;
+			autorestart.start(forceminimize);
 		}
 		else
 		{
-			Log("Cookie file found", "AIO");
+			Log("Could not validate cookie", LOG_FATAL);
+			system("pause");
+			return 0;
 		}
-
-		Autorestart autorestart;
-		autorestart.start(forceminimize);
 	}
 }
 

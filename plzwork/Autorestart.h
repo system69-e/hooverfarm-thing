@@ -10,6 +10,7 @@ public:
 	void unlockRoblox();
 	bool findRoblox();
 	void killRoblox();
+	bool validateCookie();
 	std::string SHA256(const char* str);
 
 	void _usleep(int microseconds);

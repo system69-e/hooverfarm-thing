@@ -130,6 +130,43 @@ std::string Autorestart::SHA256(const char *path)
 	return os.str();
 }
 
+bool Autorestart::validateCookie()
+{
+	if (!std::filesystem::exists("cookies.txt"))
+	{
+		Log("Cookies.txt not found", "AutoRestart", true);
+		system("pause");
+		return false;
+	}
+
+	std::ifstream file("cookies.txt");
+	if (file.peek() == std::ifstream::traits_type::eof())
+	{
+		Log("Cookies.txt is empty", "AutoRestart", true);
+		system("pause");
+		return false;
+	}
+	
+	std::vector<std::string> cookies;
+	std::string line;
+	while (std::getline(file, line))
+	{
+		cookies.push_back(line);
+	}
+
+	for (auto& cookie : cookies)
+	{
+		if (cookie.find("_|WARNING:") == std::string::npos || 
+			cookie.find("ROBUX") == std::string::npos	   || 
+			cookie.find("\"") != std::string::npos)
+		{
+			Log("A cookie in Cookies.txt is invalid", "AutoRestart", true);
+			system("pause");
+			return false;
+		}
+	}
+}
+
 void Autorestart::start(bool forceminimize)
 {
 	Log("How many minutes before restarting? ", "AutoRestart");
