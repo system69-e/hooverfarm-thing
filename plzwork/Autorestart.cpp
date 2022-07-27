@@ -133,7 +133,7 @@ std::string Autorestart::SHA256(const char *path)
 
 bool Autorestart::validateCookie()
 {
-	clear()ill
+	clear()
 	Log("Validating cookies...", "AutoRestart", true);
 	
 	if (!std::filesystem::exists("cookies.txt"))
