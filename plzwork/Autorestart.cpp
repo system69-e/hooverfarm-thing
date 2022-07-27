@@ -160,11 +160,19 @@ bool Autorestart::validateCookie()
 
 	for (auto& cookie : cookies)
 	{
-		if (cookie.find("_|WARNING:") == std::string::npos || 
-			cookie.find("ROBUX") == std::string::npos	   || 
-			cookie.find("\"") != std::string::npos)
+		__int64 index = std::distance(cookies.begin(), std::find(cookies.begin(), cookies.end(), cookie));
+		
+		if (cookie.find("_|WARNING:") == std::string::npos || cookie.find("ROBUX") == std::string::npos	)
 		{
-			Log("A cookie in Cookies.txt is invalid", "AutoRestart", true);
+			Log("A cookie in Cookies.txt is invalid, the first part of the cookie is either corrupted or missing.", "AutoRestart", true);
+			std::cout << "Invalid cookie on line: " << index + 1 << std::endl;
+			system("pause");
+			return false;
+		}
+		if (cookie.find("\"") != std::string::npos)
+		{
+			Log("A cookie in Cookies.txt is invalid, it contains quotes.", "AutoRestart", true);
+			std::cout << "Invalid cookie on line: " << index + 1 << std::endl;
 			system("pause");
 			return false;
 		}
@@ -179,15 +187,18 @@ bool Autorestart::validateCookie()
 		request.set_header("Referer", "https://www.roblox.com/");
 		Response response = request.post();
 		std::string csrfToken = response.headers["x-csrf-token"];
-
+		
+		__int64 index = std::distance(cookies.begin(), std::find(cookies.begin(), cookies.end(), cookie));
 		if (csrfToken.empty())
 		{
-			Log("A cookie in Cookies.txt is invalid", "AutoRestart", true);
+			Log("A cookie in Cookies.txt is invalid, or may also be expired", "AutoRestart", true);
+			std::cout << "Invalid cookie on line: " << index + 1 << std::endl;
 			system("pause");
 			return false;
 		}
 	}
 	Log("ze cookie(s) are valid!", "AutoRestart", true);
+	return true;
 }
 
 void Autorestart::start(bool forceminimize)
@@ -373,9 +384,7 @@ void Autorestart::start(bool forceminimize)
 
 			std::string msg = "(" + std::to_string(RestartTime - std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - start).count() + 1) + " minutes)";
 
-			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-			COORD coord = {0, 0};
-			SetConsoleCursorPosition(hConsole, coord);
+			clear();
 
 			if (FindWindow(NULL, "ROBLOX Crash") || FindWindow(NULL, "Roblox Crash")) { goto error; };
 
