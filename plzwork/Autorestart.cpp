@@ -133,7 +133,7 @@ std::string Autorestart::SHA256(const char *path)
 
 bool Autorestart::validateCookie()
 {
-	clear();
+	clear()ill
 	Log("Validating cookies...", "AutoRestart", true);
 	
 	if (!std::filesystem::exists("cookies.txt"))
@@ -160,7 +160,7 @@ bool Autorestart::validateCookie()
 
 	for (auto& cookie : cookies)
 	{
-		__int64 index = std::distance(cookies.begin(), std::find(cookies.begin(), cookies.end(), cookie));
+		long long index = std::distance(cookies.begin(), std::find(cookies.begin(), cookies.end(), cookie));
 		
 		if (cookie.find("_|WARNING:") == std::string::npos || cookie.find("ROBUX") == std::string::npos	)
 		{
@@ -188,7 +188,7 @@ bool Autorestart::validateCookie()
 		Response response = request.post();
 		std::string csrfToken = response.headers["x-csrf-token"];
 		
-		__int64 index = std::distance(cookies.begin(), std::find(cookies.begin(), cookies.end(), cookie));
+		long long index = std::distance(cookies.begin(), std::find(cookies.begin(), cookies.end(), cookie));
 		if (csrfToken.empty())
 		{
 			Log("A cookie in Cookies.txt is invalid, or may also be expired", "AutoRestart", true);
