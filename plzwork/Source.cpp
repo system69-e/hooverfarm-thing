@@ -121,20 +121,19 @@ int main(int argc, char* argv[])
 			if (ctx->results.size() > 1)
 			{
 				Log("Multiple results found, please select one: ");
-
-				int outloop = 0;
-				for (int i = 0; i < ctx->results.size(); i++)
+				
+				int i = 0;
+				for (; i < ctx->results.size(); i++)
 				{
 					std::cout << i << ": " << ctx->results[i].string() << std::endl;
-					outloop++;
 				}
-				std::cout << outloop << ": None of these are correct" << std::endl;
+				std::cout << i << ": None of these are correct" << std::endl;
 
 				Log("Select a workspace: ");
 				int selection = 0;
 				std::cin >> selection;
 
-				if (selection == outloop)
+				if (selection == i)
 				{
 					Log("No workspace selected, please manually move the exe to your workspace folder");
 					wait();
