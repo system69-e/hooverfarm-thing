@@ -64,11 +64,12 @@ int main(int argc, char* argv[])
 		SetWindowLong(GetConsoleWindow(), GWL_STYLE, GetWindowLong(GetConsoleWindow(), GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
 	}
 
-	//-- get current username 
+	/*--get current username
 	char username[UNLEN + 1];
 	DWORD username_len = UNLEN + 1;
 	GetUserName(username, &username_len);
 	std::string username_str = username;
+	*/
 	
 	//-- check if current directory is workspace, else, go stupid
 	std::string current_path = std::filesystem::current_path().string();

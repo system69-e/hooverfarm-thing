@@ -250,7 +250,6 @@ void Autorestart::start(bool forceminimize)
 
 				if (current_path.find("workspace") == std::string::npos)
 				{
-					
 					//-- extract the parent folder of line by removing \workspace
 					std::string parent = line.substr(0, line.find_last_of("\\"));
 
@@ -354,7 +353,7 @@ void Autorestart::start(bool forceminimize)
 			std::string unixtime = std::to_string(std::time(nullptr));
 			std::string browserTrackerID = randomnumber + randomnumber2;
 
-			std::string cmd = '"' + path + "\" " + "roblox-player:1+launchmode:play+gameinfo:" + authticket + "+launchtime" + ':' + unixtime + "+placelauncherurl:" + "https%3A%2F%2Fassetgame.roblox.com%2Fgame%2FPlaceLauncher.ashx%3Frequest%3DRequestGame%26browserTrackerId%3D" + browserTrackerID + "%26placeId%3D" + placeid + "%26isPlayTogetherGame%3Dfalse+" + "browsertrackerid:" + browserTrackerID + "+robloxLocale:en_us+gameLocale:en_us+channel:";
+			std::string cmd = '"' + path + '"' + "roblox-player:1+launchmode:play+gameinfo:" + authticket + "+launchtime" + ':' + unixtime + "+placelauncherurl:" + "https%3A%2F%2Fassetgame.roblox.com%2Fgame%2FPlaceLauncher.ashx%3Frequest%3DRequestGame%26browserTrackerId%3D" + browserTrackerID + "%26placeId%3D" + placeid + "%26isPlayTogetherGame%3Dfalse+" + "browsertrackerid:" + browserTrackerID + "+robloxLocale:en_us+gameLocale:en_us+channel:";
 
 			STARTUPINFOA si = {};
 			si.cb = sizeof(si);
