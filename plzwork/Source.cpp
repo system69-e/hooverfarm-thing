@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
 					std::cout << i << ": " << ctx->results[i].string() << std::endl;
 					outloop++;
 				}
-				Log(outloop + ": None of these results are correct", LOG_ERROR);
+				std::cout << outloop << ": None of these are correct" << std::endl;
 
 				Log("Select a workspace: ");
 				int selection = 0;
